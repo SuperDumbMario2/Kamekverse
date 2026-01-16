@@ -1,0 +1,125 @@
+/* Kamekverse Dark Theme, made by SuperDumbMario2. */
+:root {
+    --theme: #000;
+    --theme-dark: #0f0f0f;
+    --theme-darker: #1f1f1f;
+}
+#sub-body {
+    background: var(--theme);
+    border-bottom: 2px solid #00000075;
+}
+.guest #about {
+    background: var(--theme);
+    border-bottom: 2px solid #00000075;
+}
+.guest #about p {
+    color: #FFFFFF;
+}
+#wrapper {
+    background: var(--theme) !important;
+}
+#identified-user-banner {
+    background: #00000075;
+}
+.community-card-list > li {
+    background: #00000075;
+}
+.community-card-list > li:hover,
+.community-card-list > li:focus {
+    background: #00000066;
+}
+.community-list .title {
+    color: #fff;
+}
+#identified-user-banner:hover,
+#identified-user-banner:focus {
+    background: #00000066;
+}
+
+.big-button {
+    background-color: #00000075;
+    color: #fff;
+}
+.big-button:hover,
+.big-button:focus {
+    background-color: #00000066;
+}
+#footer {
+    background: #00000075;
+    color: #fff;
+}
+.sidebar-container {
+    background: #00000075;
+}
+.community-description {
+    background-color: #00000066;
+}
+.post-list-outline {
+    background: #00000075;
+}
+.community-name a {
+    color: #fff;
+}
+.list > li, .list > div, .list > a, .list > span{
+    border-top: 1px solid #00000066;
+}
+.user-name a {
+    color: #FFF;
+}
+.post-content-text {
+    color: #fff;
+}
+/* Beacuse the image is incompatible with color/dark themes it is automatically ommited. I cannot just remove bg beacuse it always comes out not as excepted. */
+img[src="./ass/welcome-image.png"] {
+    display: none;
+}
+.button {
+    background-color: #00000075;
+    color: #fff;
+}
+.button:hover,
+.button:focus {
+    background-color: #00000066;
+}
+.list > li:hover, .list > div:hover, .list > a:hover, .list > span:hover,
+.list > li:focus, .list > div:focus, .list > a:focus, .list > span:focus {
+    background-color: #00000066;
+}
+.post .community-container {
+    background-color: #00000066;
+    border-bottom: #111111;
+}
+.post .community-container a {
+    color: #fff;
+}
+.empathy-button {
+    border: 1px solid #00000075;
+    background: var(--theme);
+    border-bottom-color: #00000075;
+    color: #ffffff;
+}
+#global-menu li a, #global-menu li button {
+    color: #ffffff;
+}
+#sidebar-profile-body .nick-name {
+    color: #fff;
+}
+#sidebar-profile-status {
+    background: #00000066;
+}
+#sidebar-profile-status .number {
+    color: #fff;
+}
+.sidebar-profile .profile-comment {
+    color: #ffffff;
+    background-color: #00000066;
+}
+body {
+    color: #fff;
+}
+#image-header-content {
+    background-image: none;
+}
+#global-menu #global-my-menu {
+    background-color: var(--theme);
+}

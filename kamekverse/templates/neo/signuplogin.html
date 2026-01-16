@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers no-applicationcache svg inlinesvg smil svgclippaths" data-id="8a7cdef9" style=""><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width,minimum-scale=1, maximum-scale=1">
+    <meta name="format-detection" content="telephone=no">
+
+    <meta http-equiv="cache-control" content="max-age=0">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
+    <meta http-equiv="pragma" content="no-cache">
+        <title>{{ action }} to {{ name }} Network</title>
+    <link rel="stylesheet" href="{% static 'offdevice/style-auth.css' %}">
+    <script src="{% static 'offdevice/base.js' %}"></script>
+</head>
+<body>
+    <div class="hb-wrapper hb-l-fixed">
+        <!-- .hb-wrapper     -->
+        <header class="hb-header">
+            <!-- header -->
+            <div class="hb-header-wrapper">
+                <h1>{{ name }} NETWORK</h1>
+                            </div>
+            <!-- //header -->
+        </header>        <noscript>
+        <div class="hb-noscript">
+            <!-- .noscript -->
+            <div class="hb-contents-wrapper">
+                <div class="hb-page">
+                    <div class="hb-container">
+                        <h2 class="mg-btm-2x">Please Check Your Settings</h2>
+                        <p>There is a possibility that JavaScript is currently disabled on your browser.<br/>You will not be able to use this service if JavaScript is disabled.</p>                
+                    </div>
+                </div>
+            </div>
+            <!-- //.noscript -->
+        </div>
+        </noscript>
+        <div class="hb-contents" style="display: block;">
+            <!-- .hb-contents -->
+            <div class="hb-contents-wrapper">
+                
+
+
+
+
+
+<div class="hb-page">
+    <form method="post">
+        {% csrf_token %}
+                <input type="hidden" name="lang" value="en-US">
+
+    <div class="hb-container hb-l-inside">
+        <h2>{{ action }}</h2>
+        <p>{{ action_description }}</p>
+        
+    </div>
+    <div class="hb-container hb-l-inside-half hb-mg-top-none">              
+
+            <div class="auth-input-double">               
+                <label>
+                    <input type="text" name="username" maxlength="16" title="username" placeholder="{{ name }} Username" required="">
+                </label>
+                <label>
+                    <input type="password" name="password" maxlength="16" title="pwd" placeholder="Password" required="">
+                </label>
+            </div>
+
+            
+            
+            
+            
+            <input type="submit" class="hb-btn hb-is-decide" id="btn_text" value="{{ action }}">
+                       
+    </div>
+    </form>
+</div>
+                <!-- //.hb-contents -->
+            </div>
+        </div>
+        <footer class="hb-footer">
+            <!-- footer -->
+            <div class="hb-footer-wrapper">
+                <div class="hb-footer-link">
+                    
+
+ 
+                </div>                            
+                <p class="hb-footer-copyright">©SDM2 (Unrelated to Nintendo)</p>
+            </div>
+            <!-- //footer -->
+        </footer>
+        <!-- //.hb-wrapper -->
+    </div> 
+    
+    <script>
+    $(document).ready(function () {
+    	$("form").submit(function() {
+    		var self = this;
+    		$(":submit", self).prop("disabled", true);
+            setTimeout(function() {
+        	    $(":submit", self).prop("disabled", false);
+            }, 10000);
+        });
+    });
+    </script>
+    <!--[if lte IE 9]><script src="https://id.{{ name }}.net/js/placeholders_hb.js"></script><![endif]-->
+    
+    <script>
+        /*<![CDATA[*/
+        var globalLocale = 'en-US';
+        /*]]>*/
+    </script>
+    <script>
+        /*<![CDATA[*/
+        $(document).ready(function () {
+            $('#language-select').val(globalLocale);
+            $('#language-select').change(function () {
+                var selectedLang = $(this).val();
+                redirect(location.href, {lang: selectedLang});
+            });
+        });
+        /*]]>*/
+    </script>
+    
+
+
+
+</body></html>

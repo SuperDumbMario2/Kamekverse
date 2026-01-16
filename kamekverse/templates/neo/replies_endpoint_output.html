@@ -1,0 +1,17 @@
+{% load static %}
+    <li id="reply-{{ post.comment_id }}" class="post other trigger">
+      <a href="/users/{{ post.creator.username }}" class="icon-container ' . $badge . '"><img src="{% if post.creator.profile.pfp_method == 'mii-nnid' or post.creator.profile.pfp_method == 'mii-pnid' or post.creator.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if post.creator.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ post.creator.profile.pfp_value }}{% if post.creator.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression={{post.feeling}}{% else %}{% static 'neo/unknown_mii.png' %}{% endif %}" class="icon"></a>
+      <div class="body">
+        <div class="header">
+          <p class="user-name"><a href="/users/{{ post.creator.username }}">{{ post.creator.profile.mii_name }}</a></p>
+          <p class="timestamp-container">
+            <a class="timestamp">{{ post.creation_date }}</a>
+          </p>
+        </div>    <p class="reply-content-text">{{ post.body }}</p>
+    <div class="reply-meta">
+        <button type="button" class="symbol submit empathy-button" data-is-in-reply-list="1" data-feeling="normal" data-action="/replies/{{ post.comment_id }}/empathies" data-community-id="14866558073037299866" data-url-id="AYMHAAACAAADVHlAEFNvVw" data-track-label="reply" data-title-id="14866558073037299863" data-track-action="yeah" data-track-category="empathy"><span class="empathy-button-text">{% if user.is_authenticated %}{%if post.is_yeah%}Unyeah{% else %}{% if post.feeling == "like" %}Yeah♥{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Yeah...{% else %}Yeah!{% endif %}{%endif%}{%else%}{% if post.feeling == "like" %}Yeah♥{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Yeah...{% else %}Yeah!{%endif%}{%endif%}</span></button><button type="button" class="symbol submit nah-button" data-is-in-reply-list="1" data-feeling="normal" data-action="/replies/{{ post.comment_id }}/nahs" data-community-id="{{ post.community.olive_community_id }}" data-url-id="{{ post.comment_id }}" data-track-label="reply" data-title-id="{{ post.community.olive_title_id }}" data-track-action="yeah" data-track-category="nah"><span class="empathy-button-text">{% if user.is_authenticated %}{%if post.is_nah%}Un-nah{% else %}{% if post.feeling == "like" %}Nah?!{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Nah...{% else %}Nah...{% endif %}{%endif%}{%else%}{% if post.feeling == "like" %}Nah?!{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Nah!{% else %}Yeah!{%endif%}{%endif%}</span></button>
+            <div class="empathy symbol"><span class="symbol-label">Yeahs</span><span class="empathy-count">{{ post.yeahs }}</span></div>
+            <div class="nah symbol"><span class="symbol-label">Nahs</span><span class="nah-count">{{ post.nahs }}</span></div>
+        </div>
+      </div>
+    </li>

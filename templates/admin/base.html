@@ -1,0 +1,14 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block extrastyle %}{{ block.super }}
+<link rel="stylesheet" href="/static/admin/style.css">
+{% endblock %}
+
+{% block breadcrumbs %}
+  <div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+    {% if title %} <span class="separator"></span> {{ title }}{% endif %}
+  </div>
+{% endblock %} 

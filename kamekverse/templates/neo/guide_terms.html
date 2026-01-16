@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>    
+    <title>{{ name }} {% if IS_PROD == False %}({{ ENV_ID }}){% endif %}</title>
+    <meta http-equiv="content-style-type" content="text/css">
+    <meta http-equiv="content-script-type" content="text/javascript">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-title" content="{{ name }}">
+    <meta name="description" content="Kamekverse is a miiverse clone made in django by SuperDumbMario2.">
+    <meta name="keywords" content="Miiverse,ミーバース,任天堂,Nintendo,Wii U,3DS, miiverse clone, superdumbmario2">
+
+    <meta property="og:title" content="{{ name }}">
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="Kamekverse is a miiverse clone made in django by SuperDumbMario2.">
+    <meta property="og:site_name" content="{{ name }}">
+
+    
+
+    
+    <link rel="shortcut icon" href="{% static 'offdevice/favicon.png' %}">
+    <link rel="apple-touch-icon" sizes="57x57" href="https://web.archive.org/web/20160304013611im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-57x57.png?Ag2tdrIcl30F8RewVb7MpA">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://web.archive.org/web/20160304013611im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-114x114.png?np5stZwxPtIFygwO41QXAA">
+    <link rel="apple-touch-icon" sizes="72x72" href="https://web.archive.org/web/20160304013611im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-72x72.png?s4ECPF96pvErA7s03oG3gQ">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://web.archive.org/web/20160304013611im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-144x144.png?Cp5sZwpS_1aly-SFq8AeIA">
+    <link rel="stylesheet" type="text/css" href="{% static 'offdevice/offdevice.css' %}">
+    <script type="text/javascript" src="{% static 'offdevice/complete-en.js' %}"></script>
+      
+</head>
+
+  <body class="guest-top guest" data-token="" data-static-root="https://d13ph7xrk1ee39.cloudfront.net/">
+ 
+        {% include 'offdevice/header.html' %}
+
+      
+        <div id="main-body">
+          <div id="sidebar" class="general-sidebar">
+              <div class="sidebar-setting sidebar-container">
+                <ul>
+                  <li><a href="https://web.archive.org/web/20170721020440/http://www.nintendo.com/wiiu/built-in-software/#/miiverse" class="sidebar-menu-info symbol"><span>Details about Miiverse</span></a></li>
+                  <li><a href="/web/20170721020440/https://miiverse.nintendo.net/titles/14866558073002733838/14866558073004999187" class="sidebar-menu-info symbol"><span>Miiverse Announcements</span></a></li>
+                  <li><a href="/web/20170721020440/https://miiverse.nintendo.net/guide/" class="sidebar-menu-guide symbol"><span>Miiverse Code of Conduct</span></a></li>
+                  <li><a href="/web/20170721020440/https://miiverse.nintendo.net/guide/terms" class="sidebar-menu-guide symbol"><span>Use of Miiverse</span></a></li>
+                  <li><a href="/web/20170721020440/https://miiverse.nintendo.net/guide/faq" class="sidebar-menu-guide symbol"><span>Frequently Asked Questions (FAQ)</span></a></li>
+                </ul>
+              </div>
+          </div>
+          
+          <div class="main-column">
+            <div class="post-list-outline">
+              <h2 class="label">Use of Miiverse</h2>
+              <div id="guide" class="help-content">
+                <div>
+                  <p>By accessing Miiverse, you agree not to do anything that could interfere with the operation of our services or prevent others from using and enjoying them.</p>
+          
+                  <h2>Legal Notice</h2>
+                  <p>© 2013 Nintendo. Miiverse is a trademark of Nintendo.</p>
+          
+                  <h2>Using Content from Miiverse</h2>
+                  <p>Images, text, and other user-posted content on Miiverse are for viewing purposes only. All other uses are strictly prohibited.<br>
+          </p>
+          
+                  <h2>About Links</h2>
+                  <p>Linking to pages on Miiverse is generally acceptable so long as the link encompasses an entire post and does not link only to a section of a post.</p>
+          
+                  <h2>How do I use Miiverse?</h2>
+                  <p>To use Miiverse, you need either a Wii U console or a system in the Nintendo 3DS family. Whichever of these devices you use must be connected to the Internet.<br>
+          Once you have created a Nintendo Network ID using either a Wii U console or a system in the Nintendo 3DS family, you can launch Miiverse from that device.<br>
+          <br>
+          Your ID will also allow access to Miiverse from PCs, smartphones, and other non-Nintendo devices.</p>
+          
+                  <h2>Important Miiverse Information</h2>
+                  <p>Miiverse users are bound by the Miiverse Code of Conduct.<br>
+          <br>
+          Wii U users are bound by the Nintendo Network Services Agreement and Nintendo Privacy Notice.<br>
+          <br>
+          Nintendo 3DS users are bound by the Nintendo 3DS End User License Agreement and Nintendo Privacy Notice.</p>
+                  <p><a href="/web/20170721020440/https://miiverse.nintendo.net/guide/">Miiverse Code of Conduct</a></p>
+          
+                  <h2>General</h2>
+                  <p>You agree to not take any action that infringes or violates the rights of a third party or otherwise violates the law.</p>
+          
+                </div>
+              </div>
+            </div>
+          </div>
+                </div>
+        </body></html>

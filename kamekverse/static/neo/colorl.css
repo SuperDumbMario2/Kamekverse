@@ -1,0 +1,13 @@
+/* Kamekverse Dark Theme, made by SuperDumbMario2. */
+:root {
+    --theme: #fff;
+}
+#sub-body {
+    background: var(--theme);
+}
+.guest #about {
+    background: var(--theme);
+}
+#wrapper {
+    background: var(--theme) !important;
+}

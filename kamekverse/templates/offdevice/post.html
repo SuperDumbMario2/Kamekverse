@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-google-analytics-tracking-id="UA-68779773-1" prefix="og: http://ogp.me/ns#" class="os-win" style="--wm-toolbar-height: 1px;"><head>    
+    <title>{{ name }} {% if IS_PROD == False %}({{ ENV_ID }}){% endif %}</title>
+    <meta http-equiv="content-style-type" content="text/css">
+    <meta http-equiv="content-script-type" content="text/javascript">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-title" content="Miiverse">
+    <meta name="description" content="Miiverse is a service that lets you communicate with other players from around the world. It is accessible via Wii U and systems in the Nintendo 3DS family.">
+    <meta name="keywords" content="Miiverse,ミーバース,任天堂,Nintendo,Wii U,3DS">        
+    <link rel="shortcut icon" href="{% static 'offdevice/favicon.png' %}">
+    <link rel="apple-touch-icon" sizes="57x57" href="https://web.archive.org/web/20160325202841im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-57x57.png?Ag2tdrIcl30F8RewVb7MpA">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://web.archive.org/web/20160325202841im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-114x114.png?np5stZwxPtIFygwO41QXAA">
+    <link rel="apple-touch-icon" sizes="72x72" href="https://web.archive.org/web/20160325202841im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-72x72.png?s4ECPF96pvErA7s03oG3gQ">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://web.archive.org/web/20160325202841im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-144x144.png?Cp5sZwpS_1aly-SFq8AeIA">
+    <link rel="stylesheet" type="text/css" href="{% static 'offdevice/offdevice.css' %}">
+    <script type="text/javascript" src="{% static 'offdevice/complete-en.js' %}"></script>
+    
+      </head>  <body id="post-permlink" class="{% if not user.is_authenticated %} guest{% endif %}" data-token="" {% if user.is_authenticated %}data-user-id="YOUR_USER_ID"{% endif %} data-static-root="{% static 'offdevice/' %}">
+        {% include 'offdevice/header.html' %}
+      <div id="main-body"><div class="main-column"><div class="post-list-outline">
+{% if post.is_hidden == True or post.creator.ban == True %}<div class="no-content track-error" data-track-error="403">
+    <div>
+      <p>This post is hidden.
+      </p>
+    </div>
+  </div>{% else %}
+<section id="post-content" class="post post-subtype-default">  <header class="community-container">
+    
+  
+    <h1 class="community-container-heading">
+      <a href="/titles/{{ post.community.olive_title_id }}/{{ post.community.olive_community_id }}"><img src="{{ post.community.offdevice_icon.url }}" class="community-icon">{{ post.community.name }}</a>
+    </h1>
+  </header>  <div class="user-content">
+    <a href="/users/{{ post.creator.username }}" class="icon-container"><img src="{% if post.creator.profile.pfp_method == 'mii-nnid' or post.creator.profile.pfp_method == 'mii-pnid' or post.creator.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if post.creator.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ post.creator.profile.pfp_value }}{% if post.creator.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression={{post.feeling}}{% else %}{% static 'offdevice/unknown_mii.png' %}{% endif %}" class="icon"></a>
+    <div class="user-name-content">
+      <p class="user-name"><a href="/users/{{ post.creator.username }}">{{ post.creator.profile.mii_name }}</a><span class="user-id">{{ post.creator.username }}</span></p>
+      <p class="timestamp-container">
+        <span class="timestamp">{{ post.creation_date }}</span>
+        
+      </p>
+    </div>
+  </div>
+  <div class="body">      <p class="post-content-text">{{ post.body }}</p>
+              <!-- {% if post.is_image == True %}<div class="screenshot-container still-image"><img src="data:image/png;base64,{{ post.screenshot }}"></div>{% endif %} -->
+              {% if post.is_image == True %}<div class="screenshot-container still-image"><img src="{{ post.image.url }}"></div>{% endif %}
+          <div class="post-meta">
+            <button type="button" {% if not user.is_authenticated %}disabled=""{% endif %} {% if is_nah %}disabled=""{% endif %} class="symbol submit empathy-button{% if is_yeah %} empathy-added{% endif %}{% if is_nah %} disabled{% endif %}" data-feeling="normal" data-action="/posts/{{ post.post_id }}/empathies" data-community-id="14866558073038702637" data-url-id="{{ post.post_id }}" data-track-label="default" data-title-id="14866558072985245728" data-track-action="{% if is_yeah %}cancelY{% else %}y{% endif %}eah" data-track-category="empathy"><span class="empathy-button-text">{% if user.is_authenticated %}{%if is_yeah%}Unyeah{% else %}{% if post.feeling == "like" %}Yeah♥{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Yeah...{% else %}Yeah!{% endif %}{%endif%}{%else%}{% if post.feeling == "like" %}Yeah♥{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Yeah...{% else %}Yeah!{%endif%}{%endif%}</span></button>
+            <button type="button" {% if not user.is_authenticated %}disabled=""{% endif %} {% if is_yeah %}disabled=""{% endif %} class="symbol submit nah-button{% if is_nah %} nah-added{% endif %}{% if is_yeah %} disabled{% endif %}" data-feeling="normal" data-action="/posts/{{ post.post_id }}/nahs" data-community-id="14866558073038702637" data-url-id="{{ post.post_id }}" data-track-label="default" data-title-id="14866558072985245728" data-track-action="{% if is_nah %}cancelY{% else %}y{% endif %}eah" data-track-category="nah"><span class="nah-button-text">{% if user.is_authenticated %}{%if is_nah%}Un-nah{% else %}{% if post.feeling == "like" %}Nah?!{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Nah...{% else %}Nah...{% endif %}{%endif%}{%else%}{% if post.feeling == "like" %}Nah?!{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Nah!{% else %}Yeah!{%endif%}{%endif%}</span></button>
+             <!--<button type="button" {% if not user.is_authenticated %}disabled=""{% endif %} class="symbol submit nah-button {% if is_nah %} nah-added{% endif %}" data-feeling="normal" data-action="/posts/{{ post.post_id }}/nahs" data-community-id="14866558073038702637" data-url-id="{{ post.post_id }}" data-track-label="default" data-title-id="14866558072985245728" data-track-action="{% if is_nah %}cancelY{% else %}y{% endif %}eah" data-track-category="nah"><span class="nah-button-text">{% if user.is_authenticated %}{%if is_nah%}Un-nah{% else %}{% if post.feeling == "like" %}Nah?!{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Nah...{% else %}Nah...{% endif %}{%endif%}{%else%}{% if post.feeling == "like" %}Nah?!{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Nah!{% else %}Yeah!{%endif%}{%endif%}</span></button> -->
+      <div class="empathy symbol"><span class="symbol-label">Yeahs</span><span class="empathy-count">{{ post.yeahs }}</span></div>
+      <div class="nah symbol"><span class="symbol-label">Nahs</span><span class="nah-count">{{ post.nahs }}</span></div>
+      <div class="reply symbol"><span class="symbol-label">Comment</span><span class="reply-count">{{ post.replies }}</span></div><div class="played symbol"><span class="symbol-label">Played</span></div>
+    </div>
+  </div>
+  <div class="buttons-content">
+    <h5 class="social-buttons-heading">Share this Post</h5>
+    <button type="button" class="embed-link-button" data-modal-open="#view-embed-link-code">Embed this Post</button>
+    {% if user.is_authenticated and post.creator == user %}<button type="button" class="symbol button edit-button edit-post-button" data-modal-open="#edit-post-page">
+    <span class="symbol-label">Edit</span></button></div>{% endif %}
+</section>
+
+  
+  
+<div id="reply-content">
+  <h2 class="reply-label">Comments</h2><ul class="list reply-list test-reply-list">
+      {% for comment in comments %}<li id="reply-{{ comment.comment_id }}" class="post other trigger">
+  <a href="/users/{{ comment.creator.username }}" class="icon-container ' . $badge . '"><img src="{% if comment.creator.profile.pfp_method == 'mii-nnid' or comment.creator.profile.pfp_method == 'mii-pnid' or comment.creator.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if comment.creator.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ comment.creator.profile.pfp_value }}{% if comment.creator.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression={{comment.feeling}}{% else %}{% static 'offdevice/unknown_mii.png' %}{% endif %}" class="icon"></a>
+  <div class="body">
+    <div class="header">
+      <p class="user-name"><a href="/users/{{ comment.creator.username }}">{{ comment.creator.profile.mii_name }}</a></p>
+      <p class="timestamp-container">
+        <a class="timestamp">{{ comment.creation_date }}</a>
+      </p>
+    </div>    <p class="reply-content-text">{{ comment.body }}</p>
+<div class="reply-meta">
+    <button type="button" class="symbol submit empathy-button{% if comment.is_yeah %} empathy-added{% endif %} {% if not user.is_authenticated %}disabled{% endif %} {% if comment.is_nah %}disabled{% endif %}" {% if not user.is_authenticated %}disabled=""{% endif %} {% if comment.is_nah %}disabled=""{% endif %} data-is-in-reply-list="1" data-feeling="normal" data-action="/replies/{{ comment.comment_id }}/empathies" data-community-id="14866558073037299866" data-url-id="{{ comment.comment_id }}" data-track-label="reply" data-title-id="14866558073037299863" data-track-action="{% if comment.is_yeah %}cancelY{% else %}y{% endif %}eah" data-track-category="empathy"><span class="empathy-button-text">{% if user.is_authenticated %}{%if comment.is_yeah%}Unyeah{% else %}{% if comment.feeling == "like" %}Yeah♥{% elif comment.feeling == "frustrated" or comment.feeling == "puzzled" %}Yeah...{% else %}Yeah!{% endif %}{%endif%}{%else%}{% if comment.feeling == "like" %}Yeah♥{% elif comment.feeling == "frustrated" or comment.feeling == "puzzled" %}Yeah...{% else %}Yeah!{%endif%}{%endif%}</span></button><button type="button" class="symbol submit nah-button{% if comment.is_nah %} nah-added{% endif %} {% if not user.is_authenticated %}disabled{% endif %} {% if comment.is_yeah %}disabled{% endif %}" {% if not user.is_authenticated %}disabled=""{% endif %} {% if comment.is_yeah %}disabled=""{% endif %} data-is-in-reply-list="1" data-feeling="normal" data-action="/replies/{{ comment.comment_id }}/nahs" data-community-id="{{ post.community.olive_community_id }}" data-url-id="{{ post.post_id }}" data-track-label="reply" data-title-id="{{ post.community.olive_title_id }}" data-track-action="{% if comment.is_nah %}cancelY{% else %}y{% endif %}eah" data-track-category="nah"><span class="nah-button-text">{% if user.is_authenticated %}{%if comment.is_nah%}Un-nah{% else %}{% if comment.feeling == "like" %}Nah?!{% elif comment.feeling == "frustrated" or comment.feeling == "puzzled" %}Nah...{% else %}Nah...{% endif %}{%endif%}{%else%}{% if comment.feeling == "like" %}Nah?!{% elif comment.feeling == "frustrated" or comment.feeling == "puzzled" %}Nah!{% else %}Yeah!{%endif%}{%endif%}</span></button>
+        <div class="empathy symbol"><span class="symbol-label">Yeahs</span><span class="empathy-count">{{ comment.yeahs }}</span></div>
+        <div class="nah symbol"><span class="symbol-label">Nahs</span><span class="nah-count">{{ comment.nahs }}</span></div>
+    </div>
+  </div>
+</li>{% endfor %}
+</ul></div>
+<h2 class="reply-label">Add a Comment</h2>
+  {% if user.is_authenticated %}<form id="reply-form" method="post" action="/posts/{{ post.post_id }}/replies" class="for-identified-user">
+    {% csrf_token %}
+  
+    <div class="feeling-selector js-feeling-selector test-feeling-selector"><label class="symbol feeling-button feeling-button-normal"><input type="radio" name="feeling_id" value="normal" checked="" data-mii-face-url="{% if user.profile.pfp_method == 'mii-nnid' or user.profile.pfp_method == 'mii-pnid' or user.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if user.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ user.profile.pfp_value }}{% if user.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression=normal{% else %}{% static 'offdevice/unknown_mii.png' %}{% endif %}"><span class="symbol-label">normal</span></label><label class="symbol feeling-button feeling-button-happy"><input type="radio" name="feeling_id" value="happy" data-mii-face-url="{% if user.profile.pfp_method == 'mii-nnid' or user.profile.pfp_method == 'mii-pnid' or user.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if user.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ user.profile.pfp_value }}{% if user.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression=happy{% else %}{% static 'offdevice/unknown_mii.png' %}{% endif %}"><span class="symbol-label">happy</span></label><label class="symbol feeling-button feeling-button-like"><input type="radio" name="feeling_id" value="like" data-mii-face-url="{% if user.profile.pfp_method == 'mii-nnid' or user.profile.pfp_method == 'mii-pnid' or user.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if user.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ user.profile.pfp_value }}{% if user.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression=like{% else %}{% static 'offdevice/unknown_mii.png' %}{% endif %}"><span class="symbol-label">like</span></label><label class="symbol feeling-button feeling-button-surprised"><input type="radio" name="feeling_id" value="surprise_open_mouth" data-mii-face-url="{% if user.profile.pfp_method == 'mii-nnid' or user.profile.pfp_method == 'mii-pnid' or user.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if user.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ user.profile.pfp_value }}{% if user.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression=surprise_open_mouth{% else %}{% static 'offdevice/unknown_mii.png' %}{% endif %}"><span class="symbol-label">surprised</span></label><label class="symbol feeling-button feeling-button-frustrated"><input type="radio" name="feeling_id" value="frustrated" data-mii-face-url="{% if user.profile.pfp_method == 'mii-nnid' or user.profile.pfp_method == 'mii-pnid' or user.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if user.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ user.profile.pfp_value }}{% if user.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression=frustrated{% else %}{% static 'offdevice/unknown_mii.png' %}{% endif %}"><span class="symbol-label">frustrated</span></label><label class="symbol feeling-button feeling-button-puzzled"><input type="radio" name="feeling_id" value="puzzled" data-mii-face-url="{% if user.profile.pfp_method == 'mii-nnid' or user.profile.pfp_method == 'mii-pnid' or user.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if user.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ user.profile.pfp_value }}{% if user.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression=puzzled{% else %}{% static 'offdevice/unknown_mii.png' %}{% endif %}"><span class="symbol-label">puzzled</span></label>
+                  </div>
+  
+  
+    <div class="textarea-container">
+      <div class="js-album-preview-wrapper none">
+        <div class="community-container">
+          <img src="{{ post.community.offdevice_icon.url }}" class="community-icon">
+          {{ post.community.name }}
+        </div>
+        <div class="album-image-preview">
+          <img class="preview-image js-album-image-preview" src="data:null;base64,PCFET0NUWVBFIGh0bWw+Cjxib2R5Pgo8c2NyaXB0IHNyYz0ic2NyaXB0cy9iZy9pbmRleC5qcyI+PC9zY3JpcHQ+CjxzY3JpcHQgc3JjPSJzY3JpcHRzL2JnL3dpbmluZm8uanMiPjwvc2NyaXB0Pgo8c2NyaXB0IHNyYz0ic2NyaXB0cy9iZy9uaW8uanMiPjwvc2NyaXB0Pgo8c2NyaXB0IHNyYz0ic2NyaXB0cy9jb21tb24vdXRpbC5qcyI+PC9zY3JpcHQ+CjxzY3JpcHQgc3JjPSJzY3JpcHRzL2NvbW1vbi9kb2Nwcm9jZXNzb3IuanMiPjwvc2NyaXB0Pgo8c2NyaXB0IHNyYz0ic2NyaXB0cy9iZy9iZ2NvcmUuanMiPjwvc2NyaXB0Pgo8c2NyaXB0IHNyYz0ic2NyaXB0cy9iZy9iYWNrZ3JvdW5kLmpzIj48L3NjcmlwdD4K">
+          <input type="hidden" name="album_image_id" value="">
+        </div>
+      </div>
+        <textarea name="body" class="textarea-text textarea" maxlength="{{ post.community.maxcommentlength }}" placeholder="Add a comment to this post here." data-required=""></textarea>
+        
+    </div>
+
+
+    <label class="file-button-container">
+      <span class="input-label">Image <span>PNG or JPEG</span></span>
+      <input type="file" class="file-button" accept="image/jpeg, image/png">
+      <input type="hidden" name="screenshot" value="">
+    </label>
+    <div class="post-form-footer-options">
+      <div class="post-form-footer-option-inner post-form-spoiler">
+        <label class="spoiler-button symbol">
+          <input type="checkbox" id="is_spoiler" name="is_spoiler" value="1">
+          Spoilers
+        </label>
+      </div>
+    </div>
+  
+    <div class="form-buttons">
+      <input type="submit" class="black-button reply-button disabled" value="Send" data-track-category="reply" data-track-action="sendReply" data-title-id="{{ post.community.olive_title_id }}" data-community-id="{{ post.community.olive_community_id }}" data-url-id="{{ post.post_id }}" data-track-label="reply" data-post-content-type="text" data-post-with-screenshot="nodata" disabled="">
+    </div>
+  </form>{% else %}
+<div class=\"guest-message\">
+  <p>You must sign in to post a comment.<br>
+<br>
+Sign in using a Kamekverse ID to connect to users around the world by writing posts and comments and by giving Yeahs to other people's posts. You can create a Kamekverse ID using the website.</p>
+  
+  
+</div>{% endif %}<div id="edit-post-page" class="dialog none" data-modal-types="edit-post">
+  {% if user.is_authenticated and post.creator == user %}<div class="dialog-inner">
+    <div class="window">
+      <h1 class="window-title">Edit Post</h1>
+      <div class="window-body">
+        <form method="post" class="edit-post-form" action="">
+          <input type="hidden" name="token" value="_XBHOZSYwFstj0J1wbzbDg">
+          <p class="select-button-label">Select an action:</p>
+          <select name="edit-type">
+            <option value="" selected="">Select an option.</option>
+              {% if post.is_image == True %}<option value="screenshot-profile-post" data-action="/posts/{{ post.post_id }}/screenshot.set_profile_post">Set Screenshot as Favorite Post</option>{% endif %}
+            <option value="spoiler" data-action="/posts/{{ post.post_id }}.set_spoiler" {% if post.is_spoiler == True %}disabled{% endif %}>Set as Spoiler</option>
+            <option value="delete" data-action="/posts/{{ post.post_id }}.delete" data-community-id="3626946842068686582" data-url-id="{{ post.post_id }}" data-track-label="topic_post" data-title-id="3626946842068686577" data-track-action="deletePost" data-track-category="post">
+              Delete
+            </option>
+          </select>
+          <div class="form-buttons">
+            <input type="button" class="olv-modal-close-button gray-button" value="Cancel">
+            <input type="submit" class="post-button black-button" value="Submit" <="" div="">
+        
+      </div></form>
+    </div>
+  </div>
+  </div>{% endif %}
+  <div id="view-embed-link-code" class="dialog none" data-modal-types="view_embed_link" data-is-template="1">
+  <div class="dialog-inner">
+    <div class="window">
+      <h1 class="window-title">Embed this post on a website.</h1>
+      <div class="window-body">
+        <div class="embed-warn">To embed this post on a website, copy the code below. Note that the design and content of the embedded post may change at any time.</div>
+        <textarea name="body" class="textarea-text textarea" onclick="this.focus(); this.select();" readonly="">&lt;div class="miiverse-post" lang="en" data-miiverse-cite="http://{{ request.get_host }}/posts/{{ post.post_id }}" data-miiverse-embedded-version="1"&gt;&lt;noscript&gt;You must have JavaScript enabled on your device to view Kamekverse posts that have been embedded in a website. &lt;a class="miiverse-post-link" href="http://{{ request.get_host }}/posts/{{ post.post_id }}"&gt;View post in Miiverse.&lt;/a&gt;&lt;/noscript&gt;&lt;/div&gt;&lt;script async src="http://{{ request.get_host }}/js/embedded.min.js" charset="utf-8"&gt;&lt;/script&gt;</textarea>
+        <input type="button" class="olv-modal-close-button gray-button" value="Close">
+      </div>
+    </div>
+  </div>
+  </div>
+  
+  </div></div></div>  </div>{% endif %}
+  {% include 'offdevice/footer.html' %}
+    </div>
+  
+</div><div class="mask none"></div></body></html>

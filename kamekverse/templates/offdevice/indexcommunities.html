@@ -1,0 +1,210 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>    
+    <title>{{ name }} {% if IS_PROD == False %}({{ ENV_ID }}){% endif %}</title>
+    <meta http-equiv="content-style-type" content="text/css">
+    <meta http-equiv="content-script-type" content="text/javascript">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-title" content="{{ name }}">
+    <meta name="description" content="Kamekverse is a miiverse clone made in django by SuperDumbMario2.">
+    <meta name="keywords" content="Miiverse,ミーバース,任天堂,Nintendo,Wii U,3DS, miiverse clone, superdumbmario2">
+
+    <meta property="og:title" content="{{ name }}">
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="Kamekverse is a miiverse clone made in django by SuperDumbMario2.">
+    <meta property="og:site_name" content="{{ name }}">
+
+    
+
+    
+    <link rel="shortcut icon" href="{% static 'offdevice/favicon.png' %}">
+    <link rel="apple-touch-icon" sizes="57x57" href="https://web.archive.org/web/20160304013611im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-57x57.png?Ag2tdrIcl30F8RewVb7MpA">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://web.archive.org/web/20160304013611im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-114x114.png?np5stZwxPtIFygwO41QXAA">
+    <link rel="apple-touch-icon" sizes="72x72" href="https://web.archive.org/web/20160304013611im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-72x72.png?s4ECPF96pvErA7s03oG3gQ">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://web.archive.org/web/20160304013611im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-144x144.png?Cp5sZwpS_1aly-SFq8AeIA">
+    <link rel="stylesheet" type="text/css" href="{% static 'offdevice/offdevice.css' %}">
+    <script type="text/javascript" src="{% static 'offdevice/complete-en.js' %}"></script>
+      
+</head>
+
+  <body class="guest-top guest" data-token="" data-static-root="https://d13ph7xrk1ee39.cloudfront.net/">
+ 
+        {% include 'offdevice/header.html' %}
+
+      
+        <div id="main-body">
+            <div id="about">
+              {% if not user.is_authenticated %}<div id="about-inner">
+          <div id="about-text">
+            <h2 class="welcome-message">Welcome to {{ name }}!</h2>
+            <p>{{ name }} is a Miiverse clone by SuperDumbMario2 currently in closed beta.</p>
+            <div class="guest-terms-content">
+              <a class="symbol guest-terms-link test-guest-terms " href="/guide/terms">Use of {{ name }}</a>
+            </div>
+          </div>
+          <img src="{% static 'offdevice/welcome-image.png' %}">
+        </div>{% endif %}
+      </div>
+      {% if use_note == True %}
+        <div style="padding:15px 35px 15px 15px;margin-bottom:20px;border:1px solid #bce8f1;border-radius:4px;color:#31708f;background-color:#d9edf7">
+      {{ note|safe }}
+      <a href="#" style="float:right;font-size:21px;font-weight:700;line-height:1;text-shadow:0 1px 0 #fff;opacity:.2;filter:alpha(opacity=20);text-decoration:none;position:relative;top:-2px;right:-21px;color:inherit" onclick="event.preventDefault();$(this).parent().remove()">×</a>
+      </div>
+      {% endif %}
+      
+      <div class="body-content" id="community-top" data-region="USA">
+        <div class="community-main">
+          <div id="community-eyecatch">
+            <div id="community-eyecatch-main">
+              {% for post in featured_posts %}
+                <div class="eyecatch-diary-post js-eyecatch-diary-post test-eyecatch-diary-post {% if forloop.counter != 1 %}invisible{% endif %}" data-index="{{ forloop.counter }}">
+                  <a href="/posts/{{ post.post_id }}" class="community-eyecatch-image test-community-eyecatch-image" style="background-image: url('{{ post.image.url }}')">
+                    <span class="icon-container">
+                      <img src="{% if post.creator.profile.pfp_method == 'mii-nnid' or post.creator.profile.pfp_method == 'mii-pnid' or post.creator.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if post.creator.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ post.creator.profile.pfp_value }}{% if post.creator.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression={{post.feeling}}{% else %}{% static 'offdevice/unknown_mii.png' %}{% endif %}" alt="profile" class="icon community-eyecatch-usericon test-community-eyecatch-usericon">
+                    </span>
+                    <p class="community-eyecatch-balloon test-community-eyecatch-balloon"><span>{{ post.body }}</span></p>
+                  </a>
+                  <a href="{% if post.community.title.title_id %}/titles/{{ post.community.title.title_id }}/{{ post.community.olive_community_id }}{% else %}/titles/{{ post.community.olive_title_id }}/{{ post.community.olive_community_id }}{% endif%}" class="community-eyecatch-info test-community-eyecatch-info-link">
+                    <img src="{{ post.community.offdevice_icon.url }}" width="40" height="40" class="community-eyecatch-infoicon test-community-eyecatch-infoicon">
+                    <h4 class="community-game-title test-community-game-title" data-index="{{ forloop.counter }}">{{ post.community.name }}</h4>
+                    <p class="community-game-device test-community-game-device">
+                        <span class="platform-tag"><img src="{{ post.community.console.img.url }}"></span>
+                      <span class="text test-community-device-text">{{ post.community.platform_name }}</span>
+                    </p>
+                  </a>
+                </div>
+              {% endfor %}      </div>
+          </div>
+        </div>
+        <div class="community-top-sidebar">
+        <form method="GET" action="./search.php" class="search">
+            <input type="text" name="query" placeholder="Search Communities" minlength="2" maxlength="20"><input type="submit" value="q" title="Search">
+          </form>
+          <div id="identified-user-banner">
+            <a href="./verifiedposts.php" data-pjax="#body" class="list-button us">
+              <span class="title">Get the latest news here!</span>
+              <span class="text">Posts from Verified Users</span>
+            </a>
+          </div>      </div>
+      
+        <div class="community-main">
+        <h3 class="community-title symbol">Featured Communities</h3>
+        <div>
+          {% for community in featured_communities %}
+              <ul class="list community-list community-card-list test-hot-communities">
+      <li id="community-{{ community.olive_community_id }}" class="trigger test-community-list-item " tabindex="0">
+        {% if community.offdevice_banner %}
+        <img src="{{ community.offdevice_banner.url }}" class="community-list-cover">
+        {% endif %}
+        <div class="community-list-body">
+        <span class="icon-container"><img src="{{ community.offdevice_icon.url }}" class="icon"></span>
+        <div class="body">
+            <a class="title" href="{% if community.title.title_id %}/titles/{{ community.title.title_id }}/{{ community.olive_community_id }}{% else %}/titles/{{ community.olive_title_id }}/{{ community.olive_community_id }}{% endif%}" tabindex="-1">{{ community.name }}</a>
+            
+              <span class="platform-tag"><img src="{{community.console.img.url}}"></span>
+            
+            <span class="text">{{ community.platform_name }}</span>
+        </div>
+        </div>
+      </li>
+      
+              </ul>
+              {% endfor %}
+            </div>
+      
+            
+            
+      
+                <h3 class="community-title symbol">
+              <span>New Communities</span></h3>
+      
+            <div>
+              <ul class="list community-list community-card-list device-new-community-list">
+                {% for community in new_communities %}
+          <li id="community-{{ community.olive_community_id }}" class="trigger test-community-list-item " tabindex="0">
+            {% if community.offdevice_banner %}
+        <img src="{{ community.offdevice_banner.url }}" class="community-list-cover">
+        {% endif %}
+        <div class="community-list-body">
+        <span class="icon-container"><img src="{{ community.offdevice_icon.url }}" class="icon"></span>
+        <div class="body">
+            <a class="title" href="{% if community.title.title_id %}/titles/{{ community.title.title_id }}/{{ community.olive_community_id }}{% else %}/titles/{{ community.olive_title_id }}/{{ community.olive_community_id }}{% endif%}" tabindex="-1">{{ community.name }}</a>
+            
+              <span class="platform-tag"><img src="{{community.console.img.url}}"></span>
+            
+            <span class="text">{{ community.platform_name }}</span>
+        </div>
+        </div>
+      </li>
+              {% endfor %}
+              
+      
+      
+            </ul>
+              <a href="./all_comm.php?type=normal" class="big-button">Show More</a>
+            </div>      
+      
+            <div class="community-main">
+      
+            
+            
+      
+      <h3 class="community-title symbol">
+      <span>User-Generated Communities</span></h3>
+      
+      <div>
+      <ul class="list community-list community-card-list device-new-community-list">
+      {% for community in usercreated_communities %}
+      <li id="community-{{ community.olive_community_id }}" class="trigger test-community-list-item " tabindex="0">
+        {% if community.offdevice_banner %}
+      <img src="{{ community.offdevice_banner.url }}" class="community-list-cover">
+      {% endif %}
+      <div class="community-list-body">
+      <span class="icon-container"><img src="{{ community.offdevice_icon.url }}" class="icon"></span>
+      <div class="body">
+      <a class="title" href="{% if community.title.title_id %}/titles/{{ community.title.title_id }}/{{ community.olive_community_id }}{% else %}/titles/{{ community.olive_title_id }}/{{ community.olive_community_id }}{% endif%}" tabindex="-1">{{ community.name }}
+      </a>
+      
+      <span class="platform-tag"><img src="{{community.console.img.url}}"></span>
+      
+      <span class="text">{{ community.platform_name }}</span>
+      </div>
+      </div>
+      </li>
+      {% endfor %}
+      </ul>
+      <a href="./all_comm.php?type=usergenerated" class="big-button">Show More</a>
+      <a href="./create_community.php" class="big-button">Create Community</a>
+      
+      </div>
+      
+            
+          <h3 class="community-title">Special</h3>
+          <ul class="list community-list community-card-list special-community-list">
+          {% for community in special_communities %}
+          <li id="community-{{ community.olive_community_id }}" class="trigger test-community-list-item " tabindex="0">
+            {% if community.offdevice_banner %}
+        <img src="{{ community.offdevice_banner.url }}" class="community-list-cover">
+        {% endif %}
+        <div class="community-list-body">
+        <span class="icon-container"><img src="{{ community.offdevice_icon.url }}" class="icon"></span>
+        <div class="body">
+            <a class="title" href="{% if community.title.title_id %}/titles/{{ community.title.title_id }}/{{ community.olive_community_id }}{% else %}/titles/{{ community.olive_title_id }}/{{ community.olive_community_id }}{% endif%}" tabindex="-1">{{ community.name }}
+      </a>
+            
+              <span class="platform-tag"><img src="{{community.console.img.url}}"></span>
+            
+            <span class="text">{{ community.platform_name }}</span>
+        </div>
+        </div>
+      </li>
+      {% endfor %}
+      </ul>
+      <a href="./all_comm.php?type=special" class="big-button">Show More</a>
+      </ul>
+            </div>
+            {% include 'offdevice/footer.html' %}
+          </div>
+        </body></html>

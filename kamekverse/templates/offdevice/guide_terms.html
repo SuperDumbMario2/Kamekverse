@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>    
+    <title>{{ name }} - Use of {{ name }} {% if IS_PROD == False %}({{ ENV_ID }}){% endif %}</title>
+    <meta http-equiv="content-style-type" content="text/css">
+    <meta http-equiv="content-script-type" content="text/javascript">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-title" content="{{ name }}">
+    <meta name="description" content="{{ name }} is a miiverse clone made in django by SuperDumbMario2.">
+    <meta name="keywords" content="Miiverse,ミーバース,任天堂,Nintendo,Wii U,3DS, miiverse clone, superdumbmario2">
+
+    <meta property="og:title" content="{{ name }}">
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="{{ name }} is a miiverse clone made in django by SuperDumbMario2.">
+    <meta property="og:site_name" content="{{ name }}">
+
+    
+
+    
+    <link rel="shortcut icon" href="{% static 'offdevice/favicon.png' %}">
+    <link rel="apple-touch-icon" sizes="57x57" href="https://web.archive.org/web/20160304013611im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-57x57.png?Ag2tdrIcl30F8RewVb7MpA">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://web.archive.org/web/20160304013611im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-114x114.png?np5stZwxPtIFygwO41QXAA">
+    <link rel="apple-touch-icon" sizes="72x72" href="https://web.archive.org/web/20160304013611im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-72x72.png?s4ECPF96pvErA7s03oG3gQ">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://web.archive.org/web/20160304013611im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-144x144.png?Cp5sZwpS_1aly-SFq8AeIA">
+    <link rel="stylesheet" type="text/css" href="{% static 'offdevice/offdevice.css' %}">
+    <script type="text/javascript" src="{% static 'offdevice/complete-en.js' %}"></script>
+      
+</head>
+
+  <body class="community-top{% if not user.is_authenticated %} guest{% endif %}" data-token="" {% if user.is_authenticated %}data-user-id="YOUR_USER_ID"{% endif %} data-static-root="{% static 'offdevice/' %}">
+ 
+        {% include 'offdevice/header.html' %}
+
+        <div id="main-body">
+          <div id="sidebar" class="general-sidebar">
+              <div class="sidebar-setting sidebar-container">
+                <ul>
+                  <li><a href="/titles/14866558073002733838/14866558073004999187" class="sidebar-menu-info symbol"><span>{{ name }} Announcements</span></a></li>
+                  <li><a href="/guide/" class="sidebar-menu-guide symbol"><span>{{ name }} Code of Conduct</span></a></li>
+                  <li><a href="/guide/terms" class="sidebar-menu-guide symbol"><span>Use of {{ name }}</span></a></li>
+                  <li><a href="/guide/faq" class="sidebar-menu-guide symbol"><span>Frequently Asked Questions (FAQ)</span></a></li>
+                </ul>
+              </div>
+          </div>
+          
+          <div class="main-column">
+            <div class="post-list-outline">
+              <h2 class="label">Use of {{ name }}</h2>
+              <div id="guide" class="help-content">
+                <div>
+                  <p>By accessing {{ name }}, you agree not to do anything that could interfere with the operation of it.</p>
+          
+                  <h2>Legal Notice</h2>
+                  <p>Copyleft 2026 SuperDumbMario2. Not related with Nintendo, Hatena, or other companies behind Miiverse.</p>
+          
+                  <h2>Using Content from {{ name }}</h2>
+                  <p>Images, text, and other user-posted content on Miiverse usually free for use by default.<br>
+          </p>
+          
+                  <h2>About Links</h2>
+                  <p>Linking to pages on {{ name }} is generally acceptable so long as the link encompasses an entire post and does not link only to a section of a post.</p>
+          
+                  <h2>How do I use {{ name }}?</h2>
+                  <p>It is based on what you mean by using it. If you mean lurking on it/viewing/scraping content, you are already using it.<br>If you mean posting and other account-specific actions, you can do them by signing up (Some instances may request an invite code to sign up.)<br>
+          <br>
+          Your ID will also allow full access to {{ name }} from PCs, smartphones, smart fridges and pretty much everything that supports fairly modern JS.</p>
+          
+                  <h2>Important {{ name }} Information</h2>
+                  <p>{{ name }} users are bound by the {{ name }} Code of Conduct.<br>
+          <br>
+                  <p><a href="/guide/">{{ name }} Code of Conduct</a></p>
+          
+                  <h2>General</h2>
+                  <p>You agree to not take any action that infringes or violates the rights of a third party or otherwise violates the law.</p>
+          
+                </div>
+              </div>
+            </div>
+          </div>
+                </div>
+            
+            
+            
+            
+            {% include 'offdevice/footer.html' %}
+                </div>
+              
+            
+            
+            </body></html>

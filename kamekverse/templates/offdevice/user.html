@@ -1,0 +1,123 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-google-analytics-tracking-id="UA-68779773-1" class="os-win" style="--wm-toolbar-height: 1px;"><head>    
+    <title>{{ name }}</title>
+    <meta http-equiv="content-style-type" content="text/css">
+    <meta http-equiv="content-script-type" content="text/javascript">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-title" content="Miiverse">
+    <meta name="description" content="Miiverse is a service that lets you communicate with other players from around the world. It is accessible via Wii U and systems in the Nintendo 3DS family.">
+    <meta name="keywords" content="Miiverse,ミーバース,任天堂,Nintendo,Wii U,3DS">    <link rel="shortcut icon" href="{% static 'offdevice/favicon.png' %}">
+    <link rel="apple-touch-icon" sizes="57x57" href="https://web.archive.org/web/20171023052741im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-57x57.png?Ag2tdrIcl30F8RewVb7MpA">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://web.archive.org/web/20171023052741im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-114x114.png?np5stZwxPtIFygwO41QXAA">
+    <link rel="apple-touch-icon" sizes="72x72" href="https://web.archive.org/web/20171023052741im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-72x72.png?s4ECPF96pvErA7s03oG3gQ">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://web.archive.org/web/20171023052741im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-144x144.png?Cp5sZwpS_1aly-SFq8AeIA">
+    <link rel="stylesheet" type="text/css" href="{% static 'offdevice/offdevice.css' %}">
+    <script type="text/javascript" src="{% static 'offdevice/complete-en.js' %}"></script>
+    </head>  <body class="guest is-autopagerized" data-token="" data-static-root="https://d13ph7xrk1ee39.cloudfront.net/">   
+        {% include 'offdevice/header.html' %}
+      <div id="main-body">
+<!-- 69420000000000000000000069420694 -->
+    {% if vuser.profile.ban == True %}
+    <div class="no-content track-error" data-track-error="403">
+        <div>
+          <p>This user is hidden.
+          </p>
+        </div>
+      </div>
+      {% else %}
+    <div id="sidebar" class="user-sidebar">
+  <div class="sidebar-container">
+    {% if vuser.profile.featured_post %}<a href="./post.php?id=' . $fav_post . '" id="sidebar-cover" style="background-image:url("{{ vuser.profile.featured_post.image.url }}">
+    <img src="{{ vuser.profile.featured_post.image.url }}" class="sidebar-cover-image">
+  </a>{% endif %}
+    <div id="sidebar-profile-body" class="">
+      <div class="icon-container ' . $badge . '">
+        <a>
+          <img src="{% if vuser.profile.pfp_method == 'mii-nnid' or vuser.profile.pfp_method == 'mii-pnid' or vuser.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if vuser.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ vuser.profile.pfp_value }}{% if vuser.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression=normal{% else %}{% static 'offdevice/unknown_mii.png' %}{% endif %}" class="icon">
+        </a>
+      </div>
+      
+      <a class="nick-name" ' . $nickcss . '>{{ vuser.profile.mii_name }}</a>
+      <p class="id-name">{{ vuser.username }}</p>
+    </div>
+    
+    <ul id="sidebar-profile-status">
+      <li><a class=""><span><span class="number test-friend-count">{{ vuser.profile.friend_count }}</span>Friends</span></a></li>
+      
+      <li><a class=""><span><span class="number test-follower-count">{{ vuser.profile.follower_count }}</span>Followers</span></a></li>
+    </ul>
+  </div>
+  <div class="sidebar-container sidebar-profile">
+    <div class="profile-comment">
+        <p class="js-full-text">{{ vuser.profile.bio }}</p>
+    </div>
+  
+  <div class="user-data">
+    
+    <div class="game-skill data-content">
+      <h4><span>Game Experience</span></h4>
+      <div class="note">
+        <span class="test-game-skill {{ vuser.profile.game_experience }}">{{ vuser.profile.game_experience|capfirst }}</span>
+      </div>
+    </div>
+    {% if vuser.profile.discord %}
+<div class="favorite-game-genre">
+<h4><span>Discord tag</span></h4>
+<div class="note">
+  <span>{{ vuser.profile.discord }}'</span>
+  
+</div>
+</div>{% endif %}<div class="game-skill data-content">
+<h4><span>Mii coins (karma)</span></h4>
+<div class="note">
+  <span class="test-game-skill karma">{{ vuser.profile.karma }}</span>
+  
+</div>
+</div>    </div>
+</div>
+
+    
+</div>
+
+<div class="main-column"><div class="post-list-outline">  
+  <h2 class="label">{{ vuser.profile.mii_name }}'s Posts    </h2>
+<div class="list post-list js-post-list" data-next-page-url="/users/{{ vuser.username }}?offset=50">{% for post in posts %}
+  <div id="post-{{ post.post_id }}" data-href="/posts/{{ post.post_id }}" class="post post-subtype-default trigger" tabindex="0">
+    <p class="community-container">
+      <a class="test-community-link" href="/titles/{{ post.community.olive_title_id }}/{{ post.community.olive_community_id }}"><img src="{{ post.community.offdevice_icon.url }}" class="community-icon">{{ post.community.name }}</a></p>
+      <a href="/users/{{ post.creator.username }}" class="icon-container"><img src="{% if post.creator.profile.pfp_method == 'mii-nnid' or post.creator.profile.pfp_method == 'mii-pnid' or post.creator.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if post.creator.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ post.creator.profile.pfp_value }}{% if post.creator.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression={{ post.feeling }}{% else %}{% static 'offdevice/unknown_mii.png' %}{% endif %}" class="icon"></a>
+    
+    
+      <p class="user-name"><a href="/users/{{ post.creator.username }}">{{ post.creator.profile.mii_name }}</a></p>
+        <p class="timestamp-container">
+          <a class="timestamp" href="/posts/{{ post.post_id }}">{{ post.creation_date }}</a>
+        </p>
+    
+      <div class="body">
+        <div class="post-content">
+    
+            <div class="tag-container">
+    
+            </div>
+    
+    
+                <p class="post-content-text">{{ post.body }}</p>
+    
+            <div class="post-meta">
+              <button type="button" {% if not user.is_authenticated %}disabled=""{% endif %}{% if post.is_nah %} disabled=""{% endif %} class="symbol submit empathy-button {% if post.is_yeah %} empathy-added{% endif %}{% if post.is_nah %} disabled{% endif %}{% if not user.is_authenticated %} disabled{% endif %}" data-feeling="normal" data-action="/posts/{{ post.post_id }}/empathies" data-community-id="14866558073038702637" data-url-id="{{ post.post_id }}" data-track-label="default" data-title-id="14866558072985245728" data-track-action="{% if post.is_yeah %}cancelY{% else %}y{% endif %}eah" data-track-category="empathy"><span class="empathy-button-text">{% if user.is_authenticated %}{%if post.is_yeah%}Unyeah{% else %}{% if post.feeling == "like" %}Yeah♥{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Yeah...{% else %}Yeah!{% endif %}{%endif%}{%else%}{% if post.feeling == "like" %}Yeah♥{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Yeah...{% else %}Yeah!{%endif%}{%endif%}</span></button>
+              <button type="button" {% if not user.is_authenticated %}disabled=""{% endif %}{% if post.is_yeah %} disabled=""{% endif %} class="symbol submit nah-button {% if post.is_nah %} nah-added{% endif %}{% if post.is_yeah %} disabled{% endif %}{% if not user.is_authenticated %} disabled{% endif %}" data-feeling="normal" data-action="/posts/{{ post.post_id }}/nahs" data-community-id="14866558073038702637" data-url-id="{{ post.post_id }}" data-track-label="default" data-title-id="14866558072985245728" data-track-action="{% if post.is_nah %}cancelY{% else %}y{% endif %}eah" data-track-category="nah"><span class="nah-button-text">{% if user.is_authenticated %}{%if post.is_nah%}Un-nah{% else %}{% if post.feeling == "like" %}Nah?!{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Nah...{% else %}Nah...{% endif %}{%endif%}{%else%}{% if post.feeling == "like" %}Nah?!{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Nah!{% else %}Yeah!{%endif%}{%endif%}</span></button>
+              <div class="empathy symbol"><span class="symbol-label">Yeahs</span><span class="empathy-count">{{ post.yeahs }}</span></div>
+              <div class="nah symbol"><span class="symbol-label">Nahs</span><span class="nah-count">{{ post.nahs }}</span></div>
+              <div class="reply symbol"><span class="symbol-label">Comment</span><span class="reply-count">{{ post.replies }}</span></div>
+            </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}</div></div></div>{% endif %}
+    </div>
+    {% include 'offdevice/footer.html' %}
+  </div>
+
+</body></html>

@@ -1,0 +1,45 @@
+{% load static %}
+<html><head>
+  {% if user.is_authenticated %}
+  {% if user.profile.theme%}
+            <link rel="stylesheet" type="text/css" href="{{ user.profile.theme.css.url }}">
+            {% endif %}
+            {% if user.profile.themecolor%}
+            <style>
+              :root {
+                --theme: {{ user.profile.themecolor }}
+              }
+            </style>
+            {% endif %}
+            {% endif %}
+</head><body><div id="wrapper">
+      <div id="sub-body">
+        <menu id="global-menu">
+          <li id="global-menu-logo"><h1><a href="/"><img src="{% static 'neo/menu-logo.png' %}" alt="Kamekverse" width="165" height="30"></a></h1></li>
+          <li id="global-menu-login">
+            {% if user.is_authenticated %}
+            <li id="global-menu-list">
+              <ul>
+                <li id="global-menu-mymenu"><a href="/users/{{ user.username }}"><span class="icon-container"><img src="{% if user.profile.pfp_method == 'mii-nnid' or user.profile.pfp_method == 'mii-pnid' or user.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if user.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ user.profile.pfp_value }}{% if user.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression=normal{% else %}{% static 'neo/unknown_mii.png' %}{% endif %}" alt="User Page"></span><span>User Page</span></a></li>
+          <li id="global-menu-feed"><a href="/feed.php" class="symbol"><span>Feed</span></a></li>
+                <li id="global-menu-community"><a href="/" class="symbol"><span>Communities</span></a></li>
+          <li id="global-menu-news"><a href="/notifications.php" class="symbol">
+            <span class="badge" style="display: none;">0</span>
+          </a></li>
+          <li id="global-menu-my-menu"><button class="symbol js-open-global-my-menu open-global-my-menu"></button>
+            <menu id="global-my-menu" class="invisible none">
+              <li><a href="/settings/site" class="symbol my-menu-operman"><span><p style="font-family: \'MiiverseSymbols\'; display: inline; color: blue;">Y</p> Kamekverse settings</span></a></li>
+              <li><a href="/settings/account" class="symbol my-menu-operman"><span><p style="font-family: \'MiiverseSymbols\'; display: inline; color: blue;">Y</p> Account settings</span></a></li>
+              <li><a href="/toggle_neo" class="symbol my-menu-operman"><span><p style="font-family: \'MiiverseSymbols\'; display: inline; color: blue;">Y</p> Toggle Neo layout (broken on mobile)</span></a></li>
+              <li><a href="/logout" class="symbol my-menu-openman"><span>Log out</span></a></li>
+            </menu>
+          </li>
+        </ul>
+      </li>
+            {% else %}
+            <a href="/login">
+              <input type="image" alt="Sign in" src="{% static 'neo/signin_base.png' %}">
+            </a>          </li>
+            {% endif %}
+        </menu>
+      </div>

@@ -1,0 +1,30 @@
+{% load static %}
+<div id="post-{{ post.post_id }}" data-href="/posts/{{ post.post_id }}" class="post post-subtype-default trigger" tabindex="0">
+              
+                
+              
+    <a href="/users/{{ creator.username }}" class="icon-container"><img src="{% if creator.profile.pfp_method == 'mii-nnid' or creator.profile.pfp_method == 'mii-pnid' or creator.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if creator.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ creator.profile.pfp_value }}{% if creator.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression={{ feeling }}{% else %}{% static 'neo/unknown_mii.png' %}{% endif %}" class="icon"></a>
+  
+  
+    <p class="user-name"><a href="/users/{{ creator.username }}">{{ creator.profile.mii_name }}</a></p>
+      <p class="timestamp-container">
+        <a class="timestamp" href="/posts/{{ post.post_id }}">{{ post.creation_date }}</a>
+      </p>
+  
+    <div class="body">
+      <div class="post-content">
+  
+          <div class="tag-container">
+  
+          </div>
+  
+  
+              <p class="post-content-text">{{ post.body }}</p>
+  
+          <div class="post-meta">
+            <button type="button" {% if not user.is_authenticated %}disabled=""{% endif %} class="symbol submit empathy-button {% if post.is_yeah %}empathy-added{% endif %}" data-feeling="normal" data-action="/posts/{{ post.post_id }}/empathies" data-community-id="14866558073038702637" data-url-id="{{ post.post_id }}" data-track-label="default" data-title-id="14866558072985245728" data-track-action="{% if post.is_yeah %}cancelY{% else %}y{% endif %}eah" data-track-category="empathy"><span class="empathy-button-text">{% if user.is_authenticated %}{%if post.is_yeah%}Unyeah{% else %}{% if post.feeling == "like" %}Yeah♥{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Yeah...{% else %}Yeah!{% endif %}{%endif%}{%else%}{% if post.feeling == "like" %}Yeah♥{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %} Yeah...{% else %}Yeah!{%endif%}{%endif%}</span></button>
+            <div class="empathy symbol"><span class="symbol-label">Yeahs</span><span class="empathy-count">{{ post.yeahs }}</span></div>
+            <div class="reply symbol"><span class="symbol-label">Comment</span><span class="reply-count">{{ post.replies }}</span></div>
+          </div>
+      </div>
+    </div>

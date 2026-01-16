@@ -1,0 +1,6 @@
+/staticfiles/
+*.sqlite3
+/unused/
+/kamekverse/migrations/
+*.pyc
+*.log
