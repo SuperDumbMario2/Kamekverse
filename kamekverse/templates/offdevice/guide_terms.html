@@ -29,7 +29,7 @@
       
 </head>
 
-  <body class="community-top{% if not user.is_authenticated %} guest{% endif %}" data-token="" {% if user.is_authenticated %}data-user-id="YOUR_USER_ID"{% endif %} data-static-root="{% static 'offdevice/' %}">
+  <body id="help" class="community-top{% if not user.is_authenticated %} guest{% endif %}" data-token="" {% if user.is_authenticated %}data-user-id="YOUR_USER_ID"{% endif %} data-static-root="{% static 'offdevice/' %}">
  
         {% include 'offdevice/header.html' %}
 
@@ -37,7 +37,6 @@
           <div id="sidebar" class="general-sidebar">
               <div class="sidebar-setting sidebar-container">
                 <ul>
-                  <li><a href="/titles/14866558073002733838/14866558073004999187" class="sidebar-menu-info symbol"><span>{{ name }} Announcements</span></a></li>
                   <li><a href="/guide/" class="sidebar-menu-guide symbol"><span>{{ name }} Code of Conduct</span></a></li>
                   <li><a href="/guide/terms" class="sidebar-menu-guide symbol"><span>Use of {{ name }}</span></a></li>
                   <li><a href="/guide/faq" class="sidebar-menu-guide symbol"><span>Frequently Asked Questions (FAQ)</span></a></li>

@@ -438,6 +438,20 @@ def guide_terms(request):
         layout = "offdevice"
     data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID}
     return render(request, f"{layout}/guide_terms.html", data)
+def guide(request):
+    if request.GET.get("layout") == "neo" or request.COOKIES.get("layout") == "neo":
+        layout = "neo"
+    else:
+        layout = "offdevice"
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID}
+    return render(request, f"{layout}/guide.html", data)
+def guide_faq(request):
+    if request.GET.get("layout") == "neo" or request.COOKIES.get("layout") == "neo":
+        layout = "neo"
+    else:
+        layout = "offdevice"
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID}
+    return render(request, f"{layout}/guide_faq.html", data)
 # API views (Kamekverse's custom API, the replica of Miiverse API will be in an extension just like the console UIs)
 
 

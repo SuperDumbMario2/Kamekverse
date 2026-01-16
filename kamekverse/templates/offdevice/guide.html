@@ -29,62 +29,122 @@
       
 </head>
 
-  <body class="community-top{% if not user.is_authenticated %} guest{% endif %}" data-token="" {% if user.is_authenticated %}data-user-id="YOUR_USER_ID"{% endif %} data-static-root="{% static 'offdevice/' %}">
+  <body id="help" class="{% if not user.is_authenticated %} guest{% endif %}" data-token="" {% if user.is_authenticated %}data-user-id="YOUR_USER_ID"{% endif %} data-static-root="{% static 'offdevice/' %}">
  
         {% include 'offdevice/header.html' %}
-
         <div id="main-body">
           <div id="sidebar" class="general-sidebar">
               <div class="sidebar-setting sidebar-container">
                 <ul>
-                  <li><a href="/titles/14866558073002733838/14866558073004999187" class="sidebar-menu-info symbol"><span>{{ name }} Announcements</span></a></li>
-                  <li><a href="/guide/" class="sidebar-menu-guide symbol"><span>{{ name }} Code of Conduct</span></a></li>
-                  <li><a href="/guide/terms" class="sidebar-menu-guide symbol"><span>Use of {{ name }}</span></a></li>
+                  <li><a href="/guide/" class="sidebar-menu-guide symbol"><span>{{name}} Code of Conduct</span></a></li>
+                  <li><a href="/guide/terms" class="sidebar-menu-guide symbol"><span>Use of {{name}}</span></a></li>
                   <li><a href="/guide/faq" class="sidebar-menu-guide symbol"><span>Frequently Asked Questions (FAQ)</span></a></li>
                 </ul>
               </div>
           </div>
           
-          <div class="main-column">
-            <div class="post-list-outline">
-              <h2 class="label">Use of {{ name }}</h2>
-              <div id="guide" class="help-content">
-                <div>
-                  <p>By accessing {{ name }}, you agree not to do anything that could interfere with the operation of it.</p>
-          
-                  <h2>Legal Notice</h2>
-                  <p>Copyleft 2026 SuperDumbMario2. Not related with Nintendo, Hatena, or other companies behind Miiverse.</p>
-          
-                  <h2>Using Content from {{ name }}</h2>
-                  <p>Images, text, and other user-posted content on Miiverse usually free for use by default.<br>
-          </p>
-          
-                  <h2>About Links</h2>
-                  <p>Linking to pages on {{ name }} is generally acceptable so long as the link encompasses an entire post and does not link only to a section of a post.</p>
-          
-                  <h2>How do I use {{ name }}?</h2>
-                  <p>It is based on what you mean by using it. If you mean lurking on it/viewing/scraping content, you are already using it.<br>If you mean posting and other account-specific actions, you can do them by signing up (Some instances may request an invite code to sign up.)<br>
+          <div class="main-column"><div class="post-list-outline">
+            <h2 class="label">{{name}} Code of Conduct</h2>
+            <div id="guide" class="help-content">
+              <div class="num1">
+                <h2>{{name}} Manners</h2>
+                <p>The following are some important guidelines for making {{name}} a fun and enjoyable experience for everyone.<br>
           <br>
-          Your ID will also allow full access to {{ name }} from PCs, smartphones, smart fridges and pretty much everything that supports fairly modern JS.</p>
+          The {{name}} Code of Conduct contains detailed information, so please read it carefully.</p>
           
-                  <h2>Important {{ name }} Information</h2>
-                  <p>{{ name }} users are bound by the {{ name }} Code of Conduct.<br>
-          <br>
-                  <p><a href="/guide/">{{ name }} Code of Conduct</a></p>
+                <h3>Posts Can Be Viewed Around the World</h3>
+                <p>{{name}} contains many communities where people from all over the world can share their thoughts.</p>
+                <p>When you post in a community, remember that everyone can see it. Use common sense, and think before you post. {{name}} is a service that is also accessible from the Internet, so bear in mind that people who don't use {{name}} may also see your posts.</p>
+                <p>Additionally, any comments you make on your friends’ posts will be seen not by just your friends but by people around the world, too. Please keep this in mind.</p>
+                <p>That doesn't mean you can complain about someone calling out a minority or saying a slur beacuse "it's offensive". Hard hate speech like threats or harrasment is not allowed on Kamekverse but remember that this site is NOT left-leaning</p>
+                <p>Also, this rule isn't enforced as much in private communities.</p>
+                <p class="guide-img1 guide-img"><img src="https://web.archive.org/web/20170721020403im_/https://d13ph7xrk1ee39.cloudfront.net/img/welcome/welcome5-1.png?NDdarKY33S2pBlpFxs_8jA"></p>
           
-                  <h2>General</h2>
-                  <p>You agree to not take any action that infringes or violates the rights of a third party or otherwise violates the law.</p>
+                <h3>Do Not Post Personal Information—Yours or Others’</h3>
+                <p>Remember, knowing someone in {{name}} isn’t the same as knowing them in real life.</p>
+                <p>Never share your real name, home address, work or school name, or other personally identifying information with anyone on {{name}}, and never share anyone else's information either.</p>
+                <p>Additionally, if someone you meet in {{name}} invites you to meet him or her in the real world, do not accept. {{name}} is an online community and should not be used to arrange real-world meet-ups.</p>
+                <p class="guide-img3 guide-img"><img src="https://web.archive.org/web/20170721020403im_/https://d13ph7xrk1ee39.cloudfront.net/img/welcome/welcome5-2.png?m9YlOUx_3L_El0y4T9HpnQ"></p>
           
-                </div>
+                <h3>Don’t Post Spoilers (on game communities)</h3>
+                <p>Some people come to {{name}} looking for tips and tricks for games, but others want to discover a game's secrets all on their own.</p>
+                <p>Posts that reveal secrets of a game or its story are called "spoilers."</p>
+                <p>If you're posting something about a game that might be a spoiler, be sure to check the Spoilers box before sending your post.</p>
+                <p>This way, people who don't want to be spoiled won't see your post.</p>
+                <p class="guide-img4 guide-img"><img src="https://web.archive.org/web/20170721020403im_/https://d13ph7xrk1ee39.cloudfront.net/img/welcome/welcome5-3.png?O08_Av9Ee7Z3YQ4gexYV0Q"></p>
+          
+                <h3>Users Aged 12 and Under</h3>
+                <p>Due to COPPA, we cannot allow people under 13 on Kamekverse. We usually don't use "maturity" signs to assume someone's age, so in most of cases to get banned for being underage there should be at least one direct sign of you being underage.</p>
+                <p class="guide-img7 guide-img"><img src="https://web.archive.org/web/20170721020403im_/https://d13ph7xrk1ee39.cloudfront.net/img/welcome/welcome5-7.png?NbhK1bnTYVGvGxIvp-foMQ"></p>
+          
+                <h3>Code of Conduct Violations</h3>
+                <p>Our goal is to keep {{name}} fun and enjoyable for everyone.</p>
+                <p>In the event that someone violates the {{name}} Code of Conduct, we will take appropriate action, up to and including blocking the offending user or console.</p>
+                <p class="guide-img5 guide-img"><img src="https://web.archive.org/web/20170721020403im_/https://d13ph7xrk1ee39.cloudfront.net/img/welcome/welcome5-6.png?p9JgI-aYt8p5v_e2FgMn7g"></p>
               </div>
+          
+              <div class="num2">
+                <h2>A Few Reminders</h2>
+                <p>Please keep the following considerations in mind before posting on {{name}}.</p>
+          
+                <h3>Do Not Let Others Use Your Kamekverse ID</h3>
+                <p>Now that {{name}} can be accessed online from many different devices, you may be asked by others to let them use your Kamekverse ID.</p>
+                <p>However, letting others use your Kamekverse ID may result into the user you gave access to violating the Code of Conduct will get your ID banned.</p>
+          
+                <h3>Violation Types</h3>
+                <p>Additionally, the following content is prohibited from being posted or included in messages by the {{name}} Code of Conduct.</p>
+                <ul>
+                  <li>Personal Information
+                      <p>Personal information includes but is not limited to your IRL name, home address, work or school name, and phone number, and in some cases your e-mail address. Never use {{name}} as a means of setting up real-world meet-ups. Never write or ask in public for account information or IDs for other services, or any information that would allow people to be contacted directly.</p>
+                  </li>
+                  <li>Violent Content
+                    <p>This kind of content includes anything that depicts violence, promotes suicide, or endorses acts of cruelty or violence.</p>
+                  </li>
+                  <li>Inappropriate/Harmful
+                    <p>Inappropriate or harmful content includes anything that promotes dangerous behavior or illegal activities.</p>
+                  </li>
+                  <li>Hateful/Bullying
+                    <p>This includes any content that slanders, defames, or in another way harasses another person or a group of people.</p>
+                  </li>
+                  <li>Sexually Explicit
+                    <p>Sexually explicit content includes anything containing nudity, sexuality, or propositions.</p>
+                  </li>
+                  <li>Inappropriate Reporting
+                    <p>Intentionally misreporting a post for violating the {{name}} Code of Conduct is itself a violation of the {{name}} Code of Conduct.</p>
+                  </li>
+                  <li>Other
+                    <p>Additional kinds of violation include intentionally posting the following:</p>
+                    <ul>
+                      <li>Content that infringes on the copyrights, intellectual-property rights, usage of likeness, or privacy rights of any third party</li>
+                      <li>Content that disrupts the community (spam, empty posts, etc.)</li>
+                      <li>Content related to the borrowing, lending, or transferal of goods or money.</li>
+                    </ul>
+                  </li>
+                </ul>
+          
+                <h3>Consequences of Inappropriate Behavior</h3>
+                <p>Users who violate the {{name}} Code of Conduct may find their posts deleted and their access to {{name}} blocked.</p>
+                <h3>Reuse of Posted Content</h3>
+                <p>Your posts and comments may appear within games and may be modified to appear in those games.</p>
+                <p>For example, only a portion of a post might be used, the poster’s name might be obscured, or a specific word might be left out.</p>
+                <p>This is because posts sent to {{name}} will be used to make games more fun and will be in keeping with the game’s world feel or design. Thank you for your understanding.</p>
+          
+                <h3>The Use of Messages and Content on {{name}}</h3>
+                <p>We may use your publicly available posts, comments, drawings, and other contributions to {{name}}.</p>
+          
+                <h3>Disclaimers and User Responsibilities</h3>
+                <p>Each {{name}} user is responsible for understanding and complying with the {{name}} Code of Conduct.<br>
+          <br>
+          We may update this at any time, so please refer to the latest version to stay informed of any updates.</p>
+              </div>
+            
+              <a href="/guide/terms" class="arrow-button"><span>Use of {{name}}</span></a>
+            
             </div>
-          </div>
+          </div></div>
                 </div>
-            
-            
-            
-            
-            {% include 'offdevice/footer.html' %}
+                  {% include 'offdevice/footer.html' %}
+                </div>
                 </div>
               
             
