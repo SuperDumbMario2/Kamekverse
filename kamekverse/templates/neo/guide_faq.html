@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>    
+    <title>{{ name }} - Use of {{ name }} {% if IS_PROD == False %}({{ ENV_ID }}){% endif %}</title>
+    <meta http-equiv="content-style-type" content="text/css">
+    <meta http-equiv="content-script-type" content="text/javascript">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-title" content="{{ name }}">
+    <meta name="description" content="{{ name }} is a miiverse clone made in django by SuperDumbMario2.">
+    <meta name="keywords" content="Miiverse,ミーバース,任天堂,Nintendo,Wii U,3DS, miiverse clone, superdumbmario2">
+
+    <meta property="og:title" content="{{ name }}">
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="{{ name }} is a miiverse clone made in django by SuperDumbMario2.">
+    <meta property="og:site_name" content="{{ name }}">
+
+    
+
+    
+    <link rel="shortcut icon" href="{% static 'neo/favicon.png' %}">
+    <link rel="apple-touch-icon" sizes="57x57" href="https://web.archive.org/web/20160304013611im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-57x57.png?Ag2tdrIcl30F8RewVb7MpA">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://web.archive.org/web/20160304013611im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-114x114.png?np5stZwxPtIFygwO41QXAA">
+    <link rel="apple-touch-icon" sizes="72x72" href="https://web.archive.org/web/20160304013611im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-72x72.png?s4ECPF96pvErA7s03oG3gQ">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://web.archive.org/web/20160304013611im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-144x144.png?Cp5sZwpS_1aly-SFq8AeIA">
+    <link rel="stylesheet" type="text/css" href="{% static 'neo/offdevice.css' %}">
+    <script type="text/javascript" src="{% static 'neo/complete-en.js' %}"></script>
+      
+</head>
+
+  <body id="help" class="{% if not user.is_authenticated %} guest{% endif %}" data-token="" {% if user.is_authenticated %}data-user-id="YOUR_USER_ID"{% endif %} data-static-root="{% static 'neo/' %}">
+ 
+        {% include 'neo/header.html' %}
+        <div id="main-body">
+          <div id="sidebar" class="general-sidebar">
+              <div class="sidebar-setting sidebar-container">
+                <ul>
+                  <li><a href="/guide/" class="sidebar-menu-guide symbol"><span>{{name}} Code of Conduct</span></a></li>
+                  <li><a href="/guide/terms" class="sidebar-menu-guide symbol"><span>Use of {{name}}</span></a></li>
+                  <li><a href="/guide/faq" class="sidebar-menu-guide symbol"><span>Frequently Asked Questions (FAQ)</span></a></li>
+                </ul>
+              </div>
+          </div>
+            <div class="main-column">
+              <div class="post-list-outline">
+                <h2 class="label">Frequently Asked Questions (FAQ)</h2>
+                <div id="guide" class="help-content">
+                  <div class="faq">
+                    <p>If you have any questions while using {{name}}, this is the first place to check for an answer.</p>
+            
+                    <h2>I saw a post or comment that violates the {{name}} Code of Conduct. What should I do?</h2>
+                    <p>If you encounter a post or comment that violates the {{name}} Code of Conduct, please report the violation using the {{name}} reporting function.</p>
+                    <p>Reported violations will be reviewed by a Nintendo moderator.  Any post that violates the {{name}} Code of Conduct will be removed.</p>
+                    <p>Please note: false reporting is a violation of the {{name}} Code of Conduct and is subject to action up to and including loss of {{name}} access.</p>
+            
+                    <h2>I received a comment or message that is offensive, threatening, or upsetting.</h2>
+                    <p>If the comment is offending you due to insulting a minority, being right-wing, or another stuff like that: move on, maybe nah the comment</p>
+                    <p>If it's targeted harrasment, report.</p>
+            
+                    <h2>I saw a comment with a spoiler in it, even though it wasn’t marked as having spoilers.</h2>
+                    <p>It’s up to users to mark their posts as having spoilers. However, if someone forgets to do this, you can help by reporting spoilers.</p>
+                    <p>Comments and posts that receive enough spoiler reports will be marked as spoilers, viewable only to people who have chosen to keep spoilers visible.</p>
+            
+                    <h2>Why do some users have a blue check mark? What are verified users? Can I be a verified user?</h2>
+                    <div class="guide-img6">
+                      <img src="https://web.archive.org/web/20170721020441im_/https://d13ph7xrk1ee39.cloudfront.net/img/official_user.png?1JqvyeyN2QXMEhnh_9qtvQ">
+                      <p>A verified user is someone whose identity has been authenticated and certified by the {{name}} team. Their verified status indicates that they are a Kamekverse moderator.</p>
+                      <p>Verified-user status is granted only to parties when necessary as determined by {{name}} team. We usually do not accept requests for verification from the general public.</p>
+                    </div>
+                    <h2>How do I delete a {{name}} post?</h2>
+                    <p>If you post something you later do not want other users to see, you can delete it. Here is how:</p>
+                    <ol>
+                      <li>Select the post you wish to delete from within {{name}}. If you need assistance locating the post:
+                        <p>From within {{name}}, select your user icon, and then select Posts on the User Page.</p>
+                      </li>
+                      <li>Scroll through the list of posts.</li>
+                      <li>Click on the post to open it's page.</li>
+                      <li>Select the wrench icon located in the lower-right corner of the post you want to delete.</li>
+                      <li>Select the drop-down menu, and select Delete.</li>
+                      <li>Select Submit.</li>
+                    </ol>
+                    <p>Please note that deleting a post does not ensure complete or comprehensive removal of the content or information posted by you (for example, if another user has copied your post pr it was scraped or if you or another user previously shared the post on another website). We keep deleted posts for various purposes including preservation.</p>
+            
+                </div>
+              </div>
+            </div>
+                  </div>
+                  {% include 'neo/footer.html' %}
+                </div>
+                </div>
+              
+            
+            
+            </body></html>
