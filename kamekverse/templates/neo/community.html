@@ -97,6 +97,7 @@
                   </div>
                   
               {% if user.is_authenticated %}
+              {% if not community.is_locked or user.is_staff %}
               <form id="post-form" method="post" action="/posts" class="folded for-identified-user" data-post-subtype="default" name="test-post-default-form">
                 {% csrf_token %}
                 <input type="hidden" name="olv_title_id" value="{{ community.olive_title_id }}">
@@ -141,6 +142,7 @@
                   <input type="submit" class="black-button post-button" value="Send" data-track-category="post" data-track-action="sendPost" data-track-label="default" data-community-id="{{ community.olive_community_id }}" data-title-id="{{ community.olive_title_id }}" data-post-content-type="text" data-post-with-screenshot="nodata">
                 </div>
               </form>
+              {% endif %}
               {% endif %}
               
               
