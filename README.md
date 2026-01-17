@@ -9,8 +9,6 @@ First install everything in deps.txt into your venv.
 
 Then, build the database.
 
-`python manage.py makemigrations`
-
 `python manage.py migrate`
 
 Set up settings.py (put a private key instead of the django default that was on my localhost instance, make debug false, set up the enviroment parameters, and other stuff)
