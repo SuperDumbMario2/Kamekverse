@@ -50,5 +50,6 @@ urlpatterns = [
     path('guide/terms', views.guide_terms),
     path('guide/faq', views.guide_faq),
     path('guide/', views.guide),
+    path('settings/account', views.settings_account),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
