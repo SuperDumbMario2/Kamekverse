@@ -91,9 +91,8 @@
       
         <div class="community-main">
         <h3 class="community-title symbol">Featured Communities</h3>
-        <div>
+        <div><ul class="list community-list community-card-list test-hot-communities">
           {% for community in featured_communities %}
-              <ul class="list community-list community-card-list test-hot-communities">
       <li id="community-{{ community.olive_community_id }}" class="trigger test-community-list-item " tabindex="0">
         {% if community.offdevice_banner %}
         <img src="{{ community.offdevice_banner.url }}" class="community-list-cover">
@@ -110,8 +109,8 @@
         </div>
       </li>
       
-              </ul>
-              {% endfor %}
+              
+              {% endfor %}</ul>
             </div>
       
             
