@@ -883,6 +883,7 @@ body:not(.is-autopagerized) .adx-link-container {
   -ms-box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.4);
   -o-box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.4);
   box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.4);
+  z-index: 9999;
 }
 #global-menu #global-my-menu:before,
 #global-menu #global-my-menu:after {
