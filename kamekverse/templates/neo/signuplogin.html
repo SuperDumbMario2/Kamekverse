@@ -64,8 +64,13 @@
                 <label>
                     <input type="text" name="username" maxlength="16" title="username" placeholder="{{ name }} Username" required="">
                 </label>
+                {% if action == "Sign Up" and is_invite_only == True %}
                 <label>
-                    <input type="password" name="password" maxlength="16" title="pwd" placeholder="Password" required="">
+                    <input type="text" name="invitecode" maxlength="36" title="username" placeholder="Invite code" required="">
+                </label>
+                {% endif %}
+                <label>
+                    <input type="password" name="password" maxlength="256" title="pwd" placeholder="Password" required="">
                 </label>
             </div>
 
@@ -77,6 +82,12 @@
                        
     </div>
     </form>
+    {% if action == "Sign Up" %}
+    <a href="/login">Sign in</a>
+    {% endif %}
+    {% if action == "Sign In" %}
+    <a href="/signup">Sign up</a>
+    {% endif %}
 </div>
                 <!-- //.hb-contents -->
             </div>
