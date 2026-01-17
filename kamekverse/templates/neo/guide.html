@@ -19,19 +19,19 @@
     
 
     
-    <link rel="shortcut icon" href="{% static 'offdevice/favicon.png' %}">
+    <link rel="shortcut icon" href="{% static 'neo/favicon.png' %}">
     <link rel="apple-touch-icon" sizes="57x57" href="https://web.archive.org/web/20160304013611im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-57x57.png?Ag2tdrIcl30F8RewVb7MpA">
     <link rel="apple-touch-icon" sizes="114x114" href="https://web.archive.org/web/20160304013611im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-114x114.png?np5stZwxPtIFygwO41QXAA">
     <link rel="apple-touch-icon" sizes="72x72" href="https://web.archive.org/web/20160304013611im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-72x72.png?s4ECPF96pvErA7s03oG3gQ">
     <link rel="apple-touch-icon" sizes="144x144" href="https://web.archive.org/web/20160304013611im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-144x144.png?Cp5sZwpS_1aly-SFq8AeIA">
-    <link rel="stylesheet" type="text/css" href="{% static 'offdevice/offdevice.css' %}">
-    <script type="text/javascript" src="{% static 'offdevice/complete-en.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'neo/offdevice.css' %}">
+    <script type="text/javascript" src="{% static 'neo/complete-en.js' %}"></script>
       
 </head>
 
-  <body id="help" class="{% if not user.is_authenticated %} guest{% endif %}" data-token="" {% if user.is_authenticated %}data-user-id="YOUR_USER_ID"{% endif %} data-static-root="{% static 'offdevice/' %}">
+  <body id="help" class="{% if not user.is_authenticated %} guest{% endif %}" data-token="" {% if user.is_authenticated %}data-user-id="YOUR_USER_ID"{% endif %} data-static-root="{% static 'neo/' %}">
  
-        {% include 'offdevice/header.html' %}
+        {% include 'neo/header.html' %}
         <div id="main-body">
           <div id="sidebar" class="general-sidebar">
               <div class="sidebar-setting sidebar-container">
@@ -143,7 +143,7 @@
             </div>
           </div></div>
                 </div>
-                  {% include 'offdevice/footer.html' %}
+                  {% include 'neo/footer.html' %}
                 </div>
                 </div>
               
