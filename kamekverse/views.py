@@ -196,6 +196,22 @@ def posts_nahs_delete_endpoint(request, id):
         else:
             return HttpResponseForbidden("Not logged in!")
 def user(request, username):
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            if request.user.username == username:
+                print(username)
+                inuser = User.objects.get(username=username)
+                inuser.profile.mii_name = request.POST.get("mii_name", "")
+                inuser.profile.bio = request.POST.get("bio", "")
+                inuser.profile.pfp_method = request.POST.get("mii_data_type", "")
+                inuser.profile.pfp_value = request.POST.get("mii_input", "")
+                inuser.save()
+                print(username)
+                return HttpResponse()
+            else:
+                return HttpResponseForbidden(f"You aren't {username}, you are {request.user.username}!")
+        else:
+            return HttpResponseForbidden(f"You aren't logged in!")
     useru = User.objects.get(username=username)
     posts = Post.objects.filter(creator=useru).order_by("-id")
     if request.GET.get("layout") == "neo" or request.COOKIES.get("layout") == "neo":
@@ -452,6 +468,13 @@ def guide_faq(request):
         layout = "offdevice"
     data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID}
     return render(request, f"{layout}/guide_faq.html", data)
+def settings_account(request):
+    if request.GET.get("layout") == "neo" or request.COOKIES.get("layout") == "neo":
+        layout = "neo"
+    else:
+        layout = "offdevice"
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID}
+    return render(request, f"{layout}/profile_settings.html", data)
 # API views (Kamekverse's custom API, the replica of Miiverse API will be in an extension just like the console UIs)
 
 
