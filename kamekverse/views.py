@@ -473,6 +473,8 @@ def settings_account(request):
         layout = "neo"
     else:
         layout = "offdevice"
+    if not request.user.is_authenticated:
+        return redirect("/login")
     data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID}
     return render(request, f"{layout}/profile_settings.html", data)
 # API views (Kamekverse's custom API, the replica of Miiverse API will be in an extension just like the console UIs)
