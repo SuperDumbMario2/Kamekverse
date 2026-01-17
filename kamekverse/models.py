@@ -53,8 +53,8 @@ class Theme(models.Model):
         return self.name
 class Community(models.Model):
     name = models.CharField(max_length=127) # community name
-    olive_community_id = models.BigIntegerField(default=olive_ids) # URL community id
-    olive_title_id = models.BigIntegerField(default=0) # title id, i am phasing this method of passing title ids out but keeping it to not break shit.
+    olive_community_id = models.TextField(default=olive_ids) # URL community id
+    olive_title_id = models.TextField(default=0) # title id, i am phasing this method of passing title ids out but keeping it to not break shit.
     title = models.ForeignKey(Title, on_delete=models.CASCADE, null=True, blank=True) # Title that the community belongs to.
     community_id = models.AutoField(primary_key=True) # API community id, i'd start from 1000 beacuse i saw that the "Miiverse Official Community Tool" thing for 3ds that was used to create communities in past before MMAS but Django is being a retard and doesn't let me to do that
     description = models.CharField(max_length=255, null=True, blank=True) # community description
