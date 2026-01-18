@@ -73,7 +73,7 @@ class Community(models.Model):
     offdevice_icon = models.ImageField(upload_to="community_icons/", default="community_icons/default.png") # offdevice icon for this community
     offdevice_banner = models.ImageField(upload_to="community_banners/", null=True, blank=True) # offdevice banner for this community
     is_usercreated = models.BooleanField(default=False) # Is the community created by an user?
-    author_id = models.TextField(null=True, blank=True) # Author ID for the community (if user created)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True) # Author ID for the community (if user created)
     is_special = models.BooleanField(default=False) # Is the community displayed in the special tab?
     is_featured = models.BooleanField(default=False) # Is the community featured?
     allow_comments = models.BooleanField(default=True) # Does the community allow comments?
