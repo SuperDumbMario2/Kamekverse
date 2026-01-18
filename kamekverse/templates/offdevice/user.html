@@ -42,7 +42,8 @@
       <a class="nick-name" ' . $nickcss . '>{{ vuser.profile.mii_name }}</a>
       <p class="id-name">{{ vuser.username }}</p>
     </div>
-    
+    {% if vuser == user %}<div id="edit-profile-settings">
+      <a class="button symbol" href="/settings/account">Profile Settings</a></div>{% endif %}
     <ul id="sidebar-profile-status">
       <li><a class=""><span><span class="number test-friend-count">{{ vuser.profile.friend_count }}</span>Friends</span></a></li>
       
