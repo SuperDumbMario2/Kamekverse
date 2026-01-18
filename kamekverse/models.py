@@ -79,6 +79,8 @@ class Community(models.Model):
     allow_comments = models.BooleanField(default=True) # Does the community allow comments?
     def __str__(self):
         return self.name
+    class Meta:
+        verbose_name_plural = "Communities"
 class Post(models.Model):
     post_id = models.TextField(default=post_ids) # URL post ID
     creator = models.ForeignKey(User, on_delete=models.CASCADE) # creator

@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Exists, OuterRef
 from django.core.files.base import ContentFile
 from .models import *
+from .utils import *
 import os
 import requests
 import re
@@ -16,10 +17,8 @@ import uuid
 # Create your views here.
 # offdevice views
 def index(request):
-    if request.GET.get("layout") == "neo" or request.COOKIES.get("layout") == "neo":
-        layout = "neo"
-    else:
-        layout = "offdevice"
+    requestinfo = PageStartRoutine(request)
+    layout = requestinfo["layout"]
     new_communities = list(Community.objects.filter(is_private=False, is_usercreated=False,is_special=False).order_by('-community_id')[:6])
     special_communities = list(Community.objects.filter(is_private=False, is_usercreated=False,is_special=True).order_by('-community_id')[:6])
     usercreated_communities = list(Community.objects.filter(is_private=False, is_usercreated=True,is_special=False).order_by('-community_id')[:6])
@@ -67,10 +66,8 @@ def login(request):
     return render(request, "offdevice/signuplogin.html", data)
 def community(request, olive_title_id, olive_community_id):
     sortby = "all"
-    if request.GET.get("layout") == "neo" or request.COOKIES.get("layout") == "neo":
-        layout = "neo"
-    else:
-        layout = "offdevice"
+    requestinfo = PageStartRoutine(request)
+    layout = requestinfo["layout"]
     if request.GET.get("offset"):
         offset = int(request.GET.get("offset"))
     else:
@@ -214,10 +211,8 @@ def user(request, username):
             return HttpResponseForbidden(f"You aren't logged in!")
     useru = User.objects.get(username=username)
     posts = Post.objects.filter(creator=useru).order_by("-id")
-    if request.GET.get("layout") == "neo" or request.COOKIES.get("layout") == "neo":
-        layout = "neo"
-    else:
-        layout = "offdevice"
+    requestinfo = PageStartRoutine(request)
+    layout = requestinfo["layout"]
     if request.GET.get("offset"):
         offset = int(request.GET.get("offset"))
     else:
@@ -240,10 +235,8 @@ def user(request, username):
 def post(request, id):
     post = Post.objects.get(post_id=id)
     comments = Comment.objects.filter(post=post)
-    if request.GET.get("layout") == "neo" or request.COOKIES.get("layout") == "neo":
-        layout = "neo"
-    else:
-        layout = "offdevice"
+    requestinfo = PageStartRoutine(request)
+    layout = requestinfo["layout"]
     if request.GET.get("offset"):
         offset = int(request.GET.get("offset"))
     else:
@@ -333,10 +326,8 @@ def replies_empathies_delete_endpoint(request, id):
             return HttpResponseForbidden("Not logged in!")
 def community_hot(request, olive_title_id, olive_community_id):
     sortby = "hot"
-    if request.GET.get("layout") == "neo" or request.COOKIES.get("layout") == "neo":
-        layout = "neo"
-    else:
-        layout = "offdevice"
+    requestinfo = PageStartRoutine(request)
+    layout = requestinfo["layout"]
     if request.GET.get("offset"):
         offset = int(request.GET.get("offset"))
     else:
@@ -360,10 +351,8 @@ def community_hot(request, olive_title_id, olive_community_id):
     return render(request, f"{layout}/community.html", data)
 def community_cold(request, olive_title_id, olive_community_id):
     sortby = "cold"
-    if request.GET.get("layout") == "neo" or request.COOKIES.get("layout") == "neo":
-        layout = "neo"
-    else:
-        layout = "offdevice"
+    requestinfo = PageStartRoutine(request)
+    layout = requestinfo["layout"]
     if request.GET.get("offset"):
         offset = int(request.GET.get("offset"))
     else:
@@ -448,31 +437,23 @@ def toggleneo(request):
         response.set_cookie("layout", "neo", cookie_age)
     return response
 def guide_terms(request):
-    if request.GET.get("layout") == "neo" or request.COOKIES.get("layout") == "neo":
-        layout = "neo"
-    else:
-        layout = "offdevice"
+    requestinfo = PageStartRoutine(request)
+    layout = requestinfo["layout"]
     data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID}
     return render(request, f"{layout}/guide_terms.html", data)
 def guide(request):
-    if request.GET.get("layout") == "neo" or request.COOKIES.get("layout") == "neo":
-        layout = "neo"
-    else:
-        layout = "offdevice"
+    requestinfo = PageStartRoutine(request)
+    layout = requestinfo["layout"]
     data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID}
     return render(request, f"{layout}/guide.html", data)
 def guide_faq(request):
-    if request.GET.get("layout") == "neo" or request.COOKIES.get("layout") == "neo":
-        layout = "neo"
-    else:
-        layout = "offdevice"
+    requestinfo = PageStartRoutine(request)
+    layout = requestinfo["layout"]
     data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID}
     return render(request, f"{layout}/guide_faq.html", data)
 def settings_account(request):
-    if request.GET.get("layout") == "neo" or request.COOKIES.get("layout") == "neo":
-        layout = "neo"
-    else:
-        layout = "offdevice"
+    requestinfo = PageStartRoutine(request)
+    layout = requestinfo["layout"]
     if not request.user.is_authenticated:
         return redirect("/login")
     data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID}
