@@ -166,3 +166,7 @@ ENV_ID = "A0"
 # Is this invite-only?
 
 INVITE_ONLY = True
+
+# Allow self-yeahing?
+
+ALLOW_SELF_YEAH = False
