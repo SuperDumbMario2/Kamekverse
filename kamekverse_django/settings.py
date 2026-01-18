@@ -169,4 +169,4 @@ INVITE_ONLY = True
 
 # Allow self-yeahing?
 
-ALLOW_SELF_YEAH = False
+ALLOW_SELF_YEAH = True

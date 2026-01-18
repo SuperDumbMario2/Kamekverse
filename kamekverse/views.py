@@ -91,7 +91,7 @@ def community(request, olive_title_id, olive_community_id):
         
         postnahs = Post_Nah.objects.filter(post__in=posts)
         
-    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID, "community":community, "posts":posts, "nextoffset": nextoffset, "postyeahs": postyeahs, "postnahs": postnahs, "sortby": sortby}
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"ALLOW_SELF_YEAH":settings.ALLOW_SELF_YEAH, "community":community, "posts":posts, "nextoffset": nextoffset, "postyeahs": postyeahs, "postnahs": postnahs, "sortby": sortby}
     return render(request, f"{layout}/community.html", data)
 def posts_endpoint(request):
     if request.method == "POST":
@@ -116,7 +116,7 @@ def posts_endpoint(request):
         else:
             file = ""
         mypost = Post.objects.create(creator=creator, feeling=feeling, community=community, body=body, is_spoiler=bool(is_spoiler), is_image=bool(is_image), image=file, screenshot=request.POST.get("screenshot"))
-        data = {"name":settings.APP_NAME, "feeling":feeling, "body":body, "community": community, "creator": creator, "post": mypost}
+        data = {"name":settings.APP_NAME, "feeling":feeling,"ALLOW_SELF_YEAH":settings.ALLOW_SELF_YEAH, "body":body, "community": community, "creator": creator, "post": mypost}
         return render(request, "offdevice/posts_endpoint_output.html", data)
 @csrf_exempt
 def posts_empathies_endpoint(request, id):
@@ -127,6 +127,8 @@ def posts_empathies_endpoint(request, id):
                 return HttpResponseForbidden("Already yeahed with this acc!")
             if Post_Nah.objects.filter(post=postobj, user=request.user).exists():
                 return HttpResponseForbidden("Nahed with this acc!")
+            if not settings.ALLOW_SELF_YEAH and postobj.creator == request.user:
+                return HttpResponseForbidden("This instance blocks self-yeahs!")
             Post_Yeah.objects.create(post=postobj, user=request.user)
             post = Post.objects.get(post_id=id)
             post.yeahs = int(post.yeahs)+1
@@ -142,6 +144,8 @@ def posts_empathies_delete_endpoint(request, id):
     if request.method == "POST":
         if request.user.is_authenticated:
             postobj = Post.objects.get(post_id=id)
+            if not settings.ALLOW_SELF_YEAH and postobj.creator == request.user:
+                return HttpResponseForbidden("This instance blocks self-yeahs!")
             if Post_Yeah.objects.filter(post=postobj, user=request.user).exists():
                 Post_Yeah.objects.get(post=postobj, user=request.user).delete()
                 post = Post.objects.get(post_id=id)
@@ -160,6 +164,8 @@ def posts_nahs_endpoint(request, id):
     if request.method == "POST":
         if request.user.is_authenticated:
             postobj = Post.objects.get(post_id=id)
+            if not settings.ALLOW_SELF_YEAH and postobj.creator == request.user:
+                return HttpResponseForbidden("This instance blocks self-yeahs!")
             if Post_Nah.objects.filter(post=postobj, user=request.user).exists():
                 return HttpResponseForbidden("Already nahed with this acc!")
             if Post_Yeah.objects.filter(post=postobj, user=request.user).exists():
@@ -179,6 +185,8 @@ def posts_nahs_delete_endpoint(request, id):
     if request.method == "POST":
         if request.user.is_authenticated:
             postobj = Post.objects.get(post_id=id)
+            if not settings.ALLOW_SELF_YEAH and postobj.creator == request.user:
+                return HttpResponseForbidden("This instance blocks self-yeahs!")
             if Post_Nah.objects.filter(post=postobj, user=request.user).exists():
                 Post_Nah.objects.get(post=postobj, user=request.user).delete()
                 post = Post.objects.get(post_id=id)
@@ -230,7 +238,7 @@ def user(request, username):
         
         postnahs = Post_Nah.objects.filter(post__in=posts)
         
-    data = {"name":settings.APP_NAME, "vuser": useru, "posts": posts, "nextoffset": nextoffset, "postyeahs": postyeahs, "postnahs": postnahs}
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"ALLOW_SELF_YEAH":settings.ALLOW_SELF_YEAH, "vuser": useru, "posts": posts, "nextoffset": nextoffset, "postyeahs": postyeahs, "postnahs": postnahs}
     return render(request, f"{layout}/user.html", data)
 def post(request, id):
     post = Post.objects.get(post_id=id)
@@ -260,7 +268,7 @@ def post(request, id):
         
         commentnahs = Comment_Nah.objects.filter(comment__in=comments)
         
-    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID, "post": post, "nextoffset": nextoffset, "is_yeah": is_yeah, "is_nah": is_nah, "comments": comments, "commentyeahs": commentyeahs, "commentnahs": commentnahs}
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"ALLOW_SELF_YEAH":settings.ALLOW_SELF_YEAH, "post": post, "nextoffset": nextoffset, "is_yeah": is_yeah, "is_nah": is_nah, "comments": comments, "commentyeahs": commentyeahs, "commentnahs": commentnahs}
     return render(request, f"{layout}/post.html", data)
 def posts_replies_endpoint(request, id):
     if request.method == "POST":
@@ -285,13 +293,15 @@ def posts_replies_endpoint(request, id):
         else:
             fileimg = ""
         mycomment = Comment.objects.create(creator=creator, feeling=feeling, post=post, body=body, is_spoiler=bool(is_spoiler), screenshot=request.POST.get("screenshot"), image=fileimg)
-        data = {"name":settings.APP_NAME, "feeling":feeling, "body":body, "community": community, "creator": creator, "post": mycomment}
+        data = {"name":settings.APP_NAME,"ALLOW_SELF_YEAH":settings.ALLOW_SELF_YEAH, "feeling":feeling, "body":body, "community": community, "creator": creator, "post": mycomment}
         return render(request, "offdevice/replies_endpoint_output.html", data)
 @csrf_exempt
 def replies_empathies_endpoint(request, id):
     if request.method == "POST":
         if request.user.is_authenticated:
             postobj = Comment.objects.get(comment_id=id)
+            if not settings.ALLOW_SELF_YEAH and postobj.creator == request.user:
+                return HttpResponseForbidden("This instance blocks self-yeahs!")
             if Comment_Yeah.objects.filter(comment=postobj, user=request.user).exists():
                 return HttpResponseForbidden("Already yeahed with this acc!")
             if Comment_Nah.objects.filter(comment=postobj, user=request.user).exists():
@@ -311,6 +321,8 @@ def replies_empathies_delete_endpoint(request, id):
     if request.method == "POST":
         if request.user.is_authenticated:
             postobj = Comment.objects.get(comment_id=id)
+            if not settings.ALLOW_SELF_YEAH and postobj.creator == request.user:
+                return HttpResponseForbidden("This instance blocks self-yeahs!")
             if Comment_Yeah.objects.filter(comment=postobj, user=request.user).exists():
                 Comment_Yeah.objects.get(comment=postobj, user=request.user).delete()
                 post = Comment.objects.get(comment_id=id)
