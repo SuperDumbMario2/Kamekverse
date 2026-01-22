@@ -5049,6 +5049,16 @@ var Olv = Olv || {};
 		h(), a(document).on("click", ".apply-button", f), a(document).on("click", "#profile-post", g), a(document).on("change", "#favorite-game-genre select", h), e.done(function() {
 			a(document).off("click", ".apply-button", f), a(document).off("click", "#profile-post", g), a(document).off("change", "#favorite-game-genre select", h)
 		})
+	}),b.router.connect("^/communities/create", function(c, d, e) {
+		function f(c) {
+			var d = a(this),
+				e = d.closest("form");
+			b.Form.isDisabled(d) || c.isDefaultPrevented() || (c.preventDefault(), b.Form.submit(e, d).done(function(a) {
+				window.location.href = a;
+			}))
+		}a(document).on("click", ".apply-button", f), a(document).on("click", "#profile-post", g), a(document).on("change", "#favorite-game-genre select", h), e.done(function() {
+			a(document).off("click", ".apply-button", f), a(document).off("click", "#profile-post", g), a(document).off("change", "#favorite-game-genre select", h)
+		})
 	}), b.router.connect("^(/users/[0-9a-zA-Z\\-_.]+|/communities/(favorites|played)|/my_menu|/settings/profile)", function(a, c, d) {
 		b.User.setupUserSidebar(d)
 	}), b.router.connect("^/titles/[0-9]+/[0-9]+", function(a, c, d) {

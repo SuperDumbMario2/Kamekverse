@@ -164,3 +164,6 @@ class Comment_Yeah(models.Model):
 class Comment_Nah(models.Model):
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+class Community_Favorite(models.Model):
+    community = models.ForeignKey(Community, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)

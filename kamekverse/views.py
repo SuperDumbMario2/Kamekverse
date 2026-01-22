@@ -80,6 +80,7 @@ def community(request, olive_title_id, olive_community_id):
         community = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
     posts = Post.objects.filter(community=community, is_hidden=False).order_by("-id")[offset:offset+50]
     if request.user.is_authenticated:
+        is_favorited = Community_Favorite.objects.filter(community=community, user=request.user).exists()
         user_postyeahs = Post_Yeah.objects.filter(post=OuterRef('pk'), user=request.user)
         posts = posts.annotate(is_yeah=Exists(user_postyeahs))
         postyeahs = Post_Yeah.objects.filter(post__in=posts, user=request.user)
@@ -91,7 +92,7 @@ def community(request, olive_title_id, olive_community_id):
         
         postnahs = Post_Nah.objects.filter(post__in=posts)
         
-    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"ALLOW_SELF_YEAH":settings.ALLOW_SELF_YEAH, "community":community, "posts":posts, "nextoffset": nextoffset, "postyeahs": postyeahs, "postnahs": postnahs, "sortby": sortby}
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"ALLOW_SELF_YEAH":settings.ALLOW_SELF_YEAH, "community":community, "posts":posts, "nextoffset": nextoffset, "postyeahs": postyeahs, "postnahs": postnahs, "sortby": sortby, "is_favorited": is_favorited}
     return render(request, f"{layout}/community.html", data)
 def posts_endpoint(request):
     if request.method == "POST":
@@ -470,6 +471,48 @@ def settings_account(request):
         return redirect("/login")
     data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID}
     return render(request, f"{layout}/profile_settings.html", data)
+def create_community(request):
+    requestinfo = PageStartRoutine(request)
+    layout = requestinfo["layout"]
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    if request.method == "POST":
+        name = request.POST.get("community_name")
+        if len(name) > 127:
+            return HttpResponseForbidden()
+        desc = request.POST.get("community_desc")
+        if len(desc) > 255:
+            return HttpResponseForbidden()
+        if not name:
+            return HttpResponseForbidden()
+        platform_badge = Platform_Badge.objects.get(id=request.POST.get("platform_badge"))
+        platform_name = request.POST.get("platform_name")
+        result_community = Community.objects.create(name=name, description=desc, author=request.user, console=platform_badge, platform_name=platform_name, is_usercreated=True)
+        return HttpResponse(f"/titles/{result_community.olive_title_id}/{result_community.olive_community_id}")
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"platform_badges":Platform_Badge.objects.all()}
+    return render(request, f"{layout}/create_community.html", data)
+@csrf_exempt
+def communities_favorite_endpoint(request, olive_title_id, olive_community_id):
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            communityobj = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
+            if Community_Favorite.objects.filter(community=communityobj, user=request.user).exists():
+                return HttpResponseForbidden("Already favorited with this acc!")
+            Community_Favorite.objects.create(community=communityobj, user=request.user)
+            return HttpResponse()
+        else:
+            return HttpResponseForbidden("Not logged in!")
+@csrf_exempt
+def communities_unfavorite_endpoint(request, olive_title_id, olive_community_id):
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            communityobj = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
+            if Community_Favorite.objects.filter(community=communityobj, user=request.user).exists():
+                Community_Favorite.objects.get(community=communityobj, user=request.user).delete()
+                return HttpResponse()
+            return HttpResponseForbidden("Not favorited!")
+        else:
+            return HttpResponseForbidden("Not logged in!")
 # API views (Kamekverse's custom API, the replica of Miiverse API will be in an extension just like the console UIs)
 
 

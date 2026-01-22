@@ -27,6 +27,8 @@ urlpatterns = [
     path('titles/<int:olive_title_id>/<int:olive_community_id>/hot', views.community_hot),
     path('titles/<int:olive_title_id>/<int:olive_community_id>/cold', views.community_cold),
     path('titles/<int:olive_title_id>/<int:olive_community_id>/new', views.community),
+    path('titles/<int:olive_title_id>/<int:olive_community_id>/favorite', views.communities_favorite_endpoint),
+    path('titles/<int:olive_title_id>/<int:olive_community_id>/unfavorite', views.communities_unfavorite_endpoint),
     path('titles/<int:olive_title_id>/<int:olive_community_id>', views.community),
     path('posts/<str:id>/empathies', views.posts_empathies_endpoint),
     path('posts/<str:id>/empathies.delete', views.posts_empathies_delete_endpoint),
@@ -51,5 +53,6 @@ urlpatterns = [
     path('guide/faq', views.guide_faq),
     path('guide/', views.guide),
     path('settings/account', views.settings_account),
+    path('communities/create', views.create_community),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
