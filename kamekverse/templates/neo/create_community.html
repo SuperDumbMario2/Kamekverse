@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-google-analytics-tracking-id="UA-68779773-1" class="os-win" style="--wm-toolbar-height: 1px;"><head>    
+    <title>{{ name }}</title>
+    <meta http-equiv="content-style-type" content="text/css">
+    <meta http-equiv="content-script-type" content="text/javascript">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-title" content="Miiverse">
+    <meta name="description" content="Miiverse is a service that lets you communicate with other players from around the world. It is accessible via Wii U and systems in the Nintendo 3DS family.">
+    <meta name="keywords" content="Miiverse,ミーバース,任天堂,Nintendo,Wii U,3DS">    <link rel="shortcut icon" href="{% static 'neo/favicon.png' %}">
+    <link rel="apple-touch-icon" sizes="57x57" href="https://web.archive.org/web/20171023052741im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-57x57.png?Ag2tdrIcl30F8RewVb7MpA">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://web.archive.org/web/20171023052741im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-114x114.png?np5stZwxPtIFygwO41QXAA">
+    <link rel="apple-touch-icon" sizes="72x72" href="https://web.archive.org/web/20171023052741im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-72x72.png?s4ECPF96pvErA7s03oG3gQ">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://web.archive.org/web/20171023052741im_/https://d13ph7xrk1ee39.cloudfront.net/img/apple-touch-icon-144x144.png?Cp5sZwpS_1aly-SFq8AeIA">
+    <link rel="stylesheet" type="text/css" href="{% static 'neo/offdevice.css' %}">
+    <script type="text/javascript" src="{% static 'neo/complete-en.js' %}"></script>
+    </head>  <body class="guest is-autopagerized" data-token="" data-static-root="https://d13ph7xrk1ee39.cloudfront.net/">   
+        {% include 'neo/header.html' %}
+      <div id="main-body">
+<!-- 69420000000000000000000069420694 -->
+
+<div class="main-column"><div class="post-list-outline">
+    <h2 class="label">Create a community</h2>
+    <form class="setting-form" method="post" action="/communities/create" enctype="multipart/form-data">
+    <ul class="settings-list">
+          <li class="setting-community-name">
+            <p class="settings-label">Community name</p>
+            <div >
+                <input type="text" name="community_name" maxlength="127" placeholder="Name" required="">
+            </div>
+            <p class="note">Up to 127 characters.</p>
+          </li>
+          <li class="setting-community-description">
+            <p class="settings-label">Community description</p>
+            <textarea class="textarea" name="community_desc" maxlength="255" placeholder="Write about your community here."></textarea>
+            <p class="note">Up to 255 characters.</p>
+          </li>
+          <li class="setting-platform-badge">
+            <p class="settings-label">Platform badge</p>
+            <select name="platform_badge">
+              {% for b in platform_badges %}
+                <option value="{{b.id}}">{{ b.name }}</option>
+                {% endfor %}
+            </select>
+            <p class="error"></p>
+            <p class="note">Select a platform badge here. Platform badges are configured by instance owners.</p>
+          </li>
+          <li class="setting-platform-name">
+            <p class="settings-label">Platform name</p>
+            <div >
+                <input type="text" name="platform_name" placeholder="Platform name">
+            </div>
+            <p class="note">Unlimited char count.</p>
+          </li>
+        {% csrf_token %}
+        <div class="form-buttons">
+        <input type="submit" class="black-button apply-button" value="Create the community">
+        </div>
+    
+    </ul></form></div></div>
+    </div>
+    {% include 'neo/footer.html' %}
+  </div>
+
+</body></html>
