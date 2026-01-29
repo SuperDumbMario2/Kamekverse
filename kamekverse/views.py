@@ -23,8 +23,12 @@ def index(request):
     special_communities = list(Community.objects.filter(is_private=False, is_usercreated=False,is_special=True).order_by('-community_id')[:6])
     usercreated_communities = list(Community.objects.filter(is_private=False, is_usercreated=True,is_special=False).order_by('-community_id')[:6])
     featured_communities = list(Community.objects.filter(is_featured=True).order_by('-community_id')[:4])
+    if request.user.is_authenticated:
+        mycommfavs = Community_Favorite.objects.filter(user=request.user)[:8]
+        if mycommfavs.exists():
+            iscomfavs = True
     featured_posts = Post.objects.filter(is_featured=True).order_by('-id')[:10]
-    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"use_note":settings.USE_NOTE,"note":settings.NOTE,"new_communities":new_communities,"special_communities":special_communities,"usercreated_communities":usercreated_communities,"featured_communities":featured_communities,"featured_posts":featured_posts}
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"use_note":settings.USE_NOTE,"note":settings.NOTE,"new_communities":new_communities,"special_communities":special_communities,"usercreated_communities":usercreated_communities,"featured_communities":featured_communities,"featured_posts":featured_posts,"iscomfavs":iscomfavs,"mycommfavs":mycommfavs}
     return render(request, f"{layout}/indexcommunities.html", data)
 def signup(request):
     if request.method == "POST":
