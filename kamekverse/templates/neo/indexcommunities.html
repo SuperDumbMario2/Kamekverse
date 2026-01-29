@@ -56,6 +56,24 @@
       
       <div class="body-content" id="community-top" data-region="USA">
         <div class="community-main">
+          {% if user.is_authenticated and iscomfavs %}
+          <h3 class="community-title symbol community-favorite-title">Favorite communities</h3>
+          <div class="card" id="community-favorite">
+            <ul>
+              {% for community in mycommfavs %}
+              <li class="test-favorite-community">
+                <a href="{% if community.community.title.title_id %}/titles/{{ community.community.title.title_id }}/{{ community.community.olive_community_id }}{% else %}/titles/{{ community.community.olive_title_id }}/{{ community.community.olive_community_id }}{% endif%}" class="icon-container">
+                <img src="{{ community.community.offdevice_icon.url }}" class="icon">
+                </a>
+              </li>
+              {% endfor %}
+              </li>
+            <li class="read-more">
+              <a href="/communities/favorites" class="favorite-community-link symbol"><span class="symbol-label">Show more</span></a>
+            </li>
+            </ul>
+          </div>
+          {% endif %}
           <div id="community-eyecatch">
             <div id="community-eyecatch-main">
               {% for post in featured_posts %}
