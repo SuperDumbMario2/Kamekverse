@@ -23,6 +23,7 @@ def index(request):
     special_communities = list(Community.objects.filter(is_private=False, is_usercreated=False,is_special=True).order_by('-community_id')[:6])
     usercreated_communities = list(Community.objects.filter(is_private=False, is_usercreated=True,is_special=False).order_by('-community_id')[:6])
     featured_communities = list(Community.objects.filter(is_featured=True).order_by('-community_id')[:4])
+    iscomfavs = False
     if request.user.is_authenticated:
         mycommfavs = Community_Favorite.objects.filter(user=request.user)[:8]
         if mycommfavs.exists():
