@@ -68,8 +68,9 @@
                       <p class="text js-full-text">{{ community.description }}</p>
                       
                   </div>
-                <div class="sidebar-setting">
+                <div class="sidebar-setting">{% if user.is_authenticated %}
                   <button type="button" class="symbol button favorite-button {% if is_favorited %} checked{% endif %}" data-action-favorite="/titles/{{ community.olive_title_id }}/{{ community.olive_community_id }}/favorite" data-action-unfavorite="/titles/{{ community.olive_title_id }}/{{ community.olive_community_id }}/unfavorite"{% if is_favorited %} data-track-action="cancelFavorite"{% endif %}><span class="favorite-button-text">Favorite</span></button>
+                  {% endif %}
                 </div>
               </section>
             </div>
