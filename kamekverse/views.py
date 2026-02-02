@@ -85,6 +85,7 @@ def community(request, olive_title_id, olive_community_id):
     else:
         community = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
     posts = Post.objects.filter(community=community, is_hidden=False).order_by("-id")[offset:offset+50]
+    is_favorited = False
     if request.user.is_authenticated:
         is_favorited = Community_Favorite.objects.filter(community=community, user=request.user).exists()
         user_postyeahs = Post_Yeah.objects.filter(post=OuterRef('pk'), user=request.user)
