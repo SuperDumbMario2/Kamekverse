@@ -56,24 +56,6 @@
       
       <div class="body-content" id="community-top" data-region="USA">
         <div class="community-main">
-          {% if user.is_authenticated and iscomfavs %}
-          <h3 class="community-title symbol community-favorite-title">Favorite communities</h3>
-          <div class="card" id="community-favorite">
-            <ul>
-              {% for community in mycommfavs %}
-              <li class="test-favorite-community">
-                <a href="{% if community.community.title.title_id %}/titles/{{ community.community.title.title_id }}/{{ community.community.olive_community_id }}{% else %}/titles/{{ community.community.olive_title_id }}/{{ community.community.olive_community_id }}{% endif%}" class="icon-container">
-                <img src="{{ community.community.offdevice_icon.url }}" class="icon">
-                </a>
-              </li>
-              {% endfor %}
-              </li>
-            <li class="read-more">
-              <a href="/communities/favorites" class="favorite-community-link symbol"><span class="symbol-label">Show more</span></a>
-            </li>
-            </ul>
-          </div>
-          {% endif %}
           <div id="community-eyecatch">
             <div id="community-eyecatch-main">
               {% for post in featured_posts %}
@@ -84,7 +66,7 @@
                     </span>
                     <p class="community-eyecatch-balloon test-community-eyecatch-balloon"><span>{{ post.body }}</span></p>
                   </a>
-                  <a href="{% if community.title.title_id %}/titles/{{ community.title.title_id }}/{{ community.olive_community_id }}{% else %}/titles/{{ community.olive_title_id }}/{{ community.olive_community_id }}{% endif%}" class="community-eyecatch-info test-community-eyecatch-info-link">
+                  <a href="{% if post.community.title.title_id %}/titles/{{ post.community.title.title_id }}/{{ post.community.olive_community_id }}{% else %}/titles/{{ post.community.olive_title_id }}/{{ post.community.olive_community_id }}{% endif%}" class="community-eyecatch-info test-community-eyecatch-info-link">
                     <img src="{{ post.community.offdevice_icon.url }}" width="40" height="40" class="community-eyecatch-infoicon test-community-eyecatch-infoicon">
                     <h4 class="community-game-title test-community-game-title" data-index="{{ forloop.counter }}">{{ post.community.name }}</h4>
                     <p class="community-game-device test-community-game-device">
@@ -108,9 +90,26 @@
           </div>      </div>
       
         <div class="community-main">
+          {% if user.is_authenticated and iscomfavs %}
+          <h3 class="community-title symbol community-favorite-title">Favorite communities</h3>
+          <div class="card" id="community-favorite">
+            <ul>
+              {% for community in mycommfavs %}
+              <li class="test-favorite-community">
+                <a href="{% if community.community.title.title_id %}/titles/{{ community.community.title.title_id }}/{{ community.community.olive_community_id }}{% else %}/titles/{{ community.community.olive_title_id }}/{{ community.community.olive_community_id }}{% endif%}" class="icon-container">
+                <img src="{{ community.community.offdevice_icon.url }}" class="icon">
+                </a>
+              </li>
+              {% endfor %}
+              </li>
+            <li class="read-more">
+              <a href="/communities/favorites" class="favorite-community-link symbol"><span class="symbol-label">Show more</span></a>
+            </li>
+            </ul>
+          </div>
+          {% endif %}
         <h3 class="community-title symbol">Featured Communities</h3>
-        <div>
-          <ul class="list community-list community-card-list test-hot-communities">
+        <div><ul class="list community-list community-card-list test-hot-communities">
           {% for community in featured_communities %}
       <li id="community-{{ community.olive_community_id }}" class="trigger test-community-list-item " tabindex="0">
         {% if community.offdevice_banner %}
@@ -129,8 +128,7 @@
       </li>
       
               
-              {% endfor %}
-            </ul>
+              {% endfor %}</ul>
             </div>
       
             
@@ -198,7 +196,6 @@
       {% if user.is_authenticated %}
       <a href="/communities/create" class="big-button">Create Community</a>
       {% endif %}
-      
       </div>
       
             
@@ -224,7 +221,30 @@
       {% endfor %}
       </ul>
       <a href="./all_comm.php?type=special" class="big-button">Show More</a>
+      {% if user.is_authenticated and iscomfavs %}
+      <h3 class="community-title">My Private communities</h3>
+          <ul class="list community-list community-card-list special-community-list">
+          {% for community in private_communities %}
+          <li id="community-{{ community.community.olive_community_id }}" class="trigger test-community-list-item " tabindex="0">
+            {% if community.community.offdevice_banner %}
+        <img src="{{ community.community.offdevice_banner.url }}" class="community-list-cover">
+        {% endif %}
+        <div class="community-list-body">
+        <span class="icon-container"><img src="{{ community.community.offdevice_icon.url }}" class="icon"></span>
+        <div class="body">
+            <a class="title" href="{% if community.community.title.title_id %}/titles/{{ community.community.title.title_id }}/{{ community.community.olive_community_id }}{% else %}/titles/{{ community.community.olive_title_id }}/{{ community.community.olive_community_id }}{% endif%}" tabindex="-1">{{ community.community.name }}
+      </a>
+            
+              <span class="platform-tag"><img src="{{community.community.console.img.url}}"></span>
+            
+            <span class="text">{{ community.community.platform_name }}</span>
+        </div>
+        </div>
+      </li>
+      {% endfor %}
+      {% endif %}
       </ul>
+      <a href="./all_comm.php?type=special" class="big-button">Show More</a>
             </div>
             {% include 'neo/footer.html' %}
           </div>

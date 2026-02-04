@@ -20,7 +20,7 @@
       </head>  <body id="post-permlink" class="{% if not user.is_authenticated %} guest{% endif %}" data-token="" {% if user.is_authenticated %}data-user-id="YOUR_USER_ID"{% endif %} data-static-root="{% static 'neo/' %}">
         {% include 'neo/header.html' %}
       <div id="main-body"><div class="main-column"><div class="post-list-outline">
-{% if post.is_hidden == True or post.creator.ban == True %}<div class="no-content track-error" data-track-error="403">
+{% if post.is_hidden == True or post.creator.ban == True or iscommmunityaccessible == False %}<div class="no-content track-error" data-track-error="403">
     <div>
       <p>This post is hidden.
       </p>

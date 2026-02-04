@@ -29,8 +29,11 @@ def index(request):
         mycommfavs = Community_Favorite.objects.filter(user=request.user)[:8]
         if mycommfavs.exists():
             iscomfavs = True
+    myprivcommunities = Private_Community_Access.objects.none()
+    if request.user.is_authenticated:
+        myprivcommunities = Private_Community_Access.objects.filter(user=request.user)[:6]
     featured_posts = Post.objects.filter(is_featured=True).order_by('-id')[:10]
-    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"use_note":settings.USE_NOTE,"note":settings.NOTE,"new_communities":new_communities,"special_communities":special_communities,"usercreated_communities":usercreated_communities,"featured_communities":featured_communities,"featured_posts":featured_posts,"iscomfavs":iscomfavs,"mycommfavs":mycommfavs}
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"use_note":settings.USE_NOTE,"note":settings.NOTE,"new_communities":new_communities,"special_communities":special_communities,"usercreated_communities":usercreated_communities,"featured_communities":featured_communities,"featured_posts":featured_posts,"iscomfavs":iscomfavs,"mycommfavs":mycommfavs,"private_communities":myprivcommunities}
     return render(request, f"{layout}/indexcommunities.html", data)
 def signup(request):
     if request.method == "POST":
@@ -84,6 +87,13 @@ def community(request, olive_title_id, olive_community_id):
         community = Community.objects.get(title=title, olive_community_id=olive_community_id)
     else:
         community = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
+    if community.is_private:
+        if request.user.is_authenticated:
+            allows = Private_Community_Access.objects.filter(user=request.user, community=community)
+            if not allows and not community.creator == request.user:
+                return HttpResponseForbidden("You cannot access this community!")
+        else:
+            return HttpResponseForbidden("You are not logged in!")
     posts = Post.objects.filter(community=community, is_hidden=False).order_by("-id")[offset:offset+50]
     is_favorited = False
     if request.user.is_authenticated:
@@ -106,6 +116,10 @@ def posts_endpoint(request):
         community = Community.objects.get(olive_title_id=request.POST.get("olv_title_id"), olive_community_id=request.POST.get("olv_community_id"))
         if not request.user.is_authenticated:
             return HttpResponseForbidden("Not logged in!")
+        if community.is_private:
+            allows = Private_Community_Access.objects.filter(user=request.user, community=community)
+            if not allows and not community.creator == request.user:
+                return HttpResponseForbidden("You cannot access this community!")
         creator = request.user
         feeling = request.POST.get("feeling_id")
         body = request.POST.get("body")
@@ -226,7 +240,7 @@ def user(request, username):
         else:
             return HttpResponseForbidden(f"You aren't logged in!")
     useru = User.objects.get(username=username)
-    posts = Post.objects.filter(creator=useru).order_by("-id")
+    posts = Post.objects.filter(creator=useru, community__is_private=False).order_by("-id")
     requestinfo = PageStartRoutine(request)
     layout = requestinfo["layout"]
     if request.GET.get("offset"):
@@ -250,6 +264,14 @@ def user(request, username):
     return render(request, f"{layout}/user.html", data)
 def post(request, id):
     post = Post.objects.get(post_id=id)
+    iscommmunityaccessible = False
+    if request.user.is_authenticated:
+        myprivcomms = Private_Community_Access.objects.filter(user=request.user)
+        for c in myprivcomms:
+            if c == post.community:
+                iscommmunityaccessible = True
+    if post.community.is_private == False:
+        iscommmunityaccessible = True
     comments = Comment.objects.filter(post=post)
     requestinfo = PageStartRoutine(request)
     layout = requestinfo["layout"]
@@ -276,13 +298,11 @@ def post(request, id):
         
         commentnahs = Comment_Nah.objects.filter(comment__in=comments)
         
-    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"ALLOW_SELF_YEAH":settings.ALLOW_SELF_YEAH, "post": post, "nextoffset": nextoffset, "is_yeah": is_yeah, "is_nah": is_nah, "comments": comments, "commentyeahs": commentyeahs, "commentnahs": commentnahs}
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"ALLOW_SELF_YEAH":settings.ALLOW_SELF_YEAH, "post": post, "nextoffset": nextoffset, "is_yeah": is_yeah, "is_nah": is_nah, "comments": comments, "commentyeahs": commentyeahs, "commentnahs": commentnahs, "iscommmunityaccessible": iscommmunityaccessible}
     return render(request, f"{layout}/post.html", data)
 def posts_replies_endpoint(request, id):
     if request.method == "POST":
         post = Post.objects.get(post_id=id)
-        post.replies = post.replies+1
-        post.save()
         if not request.user.is_authenticated:
             return HttpResponseForbidden("Not logged in!")
         creator = request.user
@@ -301,7 +321,9 @@ def posts_replies_endpoint(request, id):
         else:
             fileimg = ""
         mycomment = Comment.objects.create(creator=creator, feeling=feeling, post=post, body=body, is_spoiler=bool(is_spoiler), screenshot=request.POST.get("screenshot"), image=fileimg)
-        data = {"name":settings.APP_NAME,"ALLOW_SELF_YEAH":settings.ALLOW_SELF_YEAH, "feeling":feeling, "body":body, "community": community, "creator": creator, "post": mycomment}
+        data = {"name":settings.APP_NAME,"ALLOW_SELF_YEAH":settings.ALLOW_SELF_YEAH, "feeling":feeling, "body":body, "community": post.community, "creator": creator, "post": mycomment}
+        post.replies = post.replies+1
+        post.save()
         return render(request, "offdevice/replies_endpoint_output.html", data)
 @csrf_exempt
 def replies_empathies_endpoint(request, id):
@@ -353,9 +375,22 @@ def community_hot(request, olive_title_id, olive_community_id):
     else:
         offset = 0
     nextoffset = offset+50
-    community = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
-    posts = Post.objects.filter(community=community).order_by("-yeahs", "-replies", "nahs")[offset:offset+50]
+    if Community.objects.get(olive_community_id=olive_community_id).title:
+        title = Title.objects.get(title_id=olive_title_id)
+        community = Community.objects.get(title=title, olive_community_id=olive_community_id)
+    else:
+        community = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
+    if community.is_private:
+        if request.user.is_authenticated:
+            allows = Private_Community_Access.objects.filter(user=request.user, community=community)
+            if not allows and not community.creator == request.user:
+                return HttpResponseForbidden("You cannot access this community!")
+        else:
+            return HttpResponseForbidden("You are not logged in!")
+    posts = Post.objects.filter(community=community, is_hidden=False).order_by("-yeahs", "-replies", "nahs")[offset:offset+50]
+    is_favorited = False
     if request.user.is_authenticated:
+        is_favorited = Community_Favorite.objects.filter(community=community, user=request.user).exists()
         user_postyeahs = Post_Yeah.objects.filter(post=OuterRef('pk'), user=request.user)
         posts = posts.annotate(is_yeah=Exists(user_postyeahs))
         postyeahs = Post_Yeah.objects.filter(post__in=posts, user=request.user)
@@ -367,7 +402,7 @@ def community_hot(request, olive_title_id, olive_community_id):
         
         postnahs = Post_Nah.objects.filter(post__in=posts)
         
-    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID, "community":community, "posts":posts, "nextoffset": nextoffset, "postyeahs": postyeahs, "postnahs": postnahs, "sortby": sortby}
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"ALLOW_SELF_YEAH":settings.ALLOW_SELF_YEAH, "community":community, "posts":posts, "nextoffset": nextoffset, "postyeahs": postyeahs, "postnahs": postnahs, "sortby": sortby, "is_favorited": is_favorited}
     return render(request, f"{layout}/community.html", data)
 def community_cold(request, olive_title_id, olive_community_id):
     sortby = "cold"
@@ -378,9 +413,22 @@ def community_cold(request, olive_title_id, olive_community_id):
     else:
         offset = 0
     nextoffset = offset+50
-    community = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
-    posts = Post.objects.filter(community=community).order_by("yeahs", "replies", "-nahs")[offset:offset+50]
+    if Community.objects.get(olive_community_id=olive_community_id).title:
+        title = Title.objects.get(title_id=olive_title_id)
+        community = Community.objects.get(title=title, olive_community_id=olive_community_id)
+    else:
+        community = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
+    if community.is_private:
+        if request.user.is_authenticated:
+            allows = Private_Community_Access.objects.filter(user=request.user, community=community)
+            if not allows and not community.creator == request.user:
+                return HttpResponseForbidden("You cannot access this community!")
+        else:
+            return HttpResponseForbidden("You are not logged in!")
+    posts = Post.objects.filter(community=community, is_hidden=False).order_by("yeahs", "-replies", "-nahs")[offset:offset+50]
+    is_favorited = False
     if request.user.is_authenticated:
+        is_favorited = Community_Favorite.objects.filter(community=community, user=request.user).exists()
         user_postyeahs = Post_Yeah.objects.filter(post=OuterRef('pk'), user=request.user)
         posts = posts.annotate(is_yeah=Exists(user_postyeahs))
         postyeahs = Post_Yeah.objects.filter(post__in=posts, user=request.user)
@@ -389,21 +437,30 @@ def community_cold(request, olive_title_id, olive_community_id):
         postnahs = Post_Nah.objects.filter(post__in=posts, user=request.user)
     else:
         postyeahs = Post_Yeah.objects.filter(post__in=posts)
+        
         postnahs = Post_Nah.objects.filter(post__in=posts)
         
-    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID, "community":community, "posts":posts, "nextoffset": nextoffset, "postyeahs": postyeahs, "postnahs": postnahs, "sortby": sortby}
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"ALLOW_SELF_YEAH":settings.ALLOW_SELF_YEAH, "community":community, "posts":posts, "nextoffset": nextoffset, "postyeahs": postyeahs, "postnahs": postnahs, "sortby": sortby, "is_favorited": is_favorited}
     return render(request, f"{layout}/community.html", data)
 def embeddedminjs(request):
     return render(request, "js/embedded.min.js", content_type='application/javascript')
 @csrf_exempt
 def post_set_spoiler(request, id):
     post = Post.objects.get(post_id=id)
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden("log in pls")
+    if request.user != post.creator and not request.user.is_staff:
+        return HttpResponseForbidden("no")
     post.is_spoiler = True
     post.save()
     return HttpResponse()
 @csrf_exempt
 def post_delete(request, id):
     post = Post.objects.get(post_id=id)
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden("log in pls")
+    if request.user != post.creator and not request.user.is_staff:
+        return HttpResponseForbidden("no")
     post.is_hidden = True
     post.save()
     return HttpResponse()
@@ -494,7 +551,12 @@ def create_community(request):
             return HttpResponseForbidden()
         platform_badge = Platform_Badge.objects.get(id=request.POST.get("platform_badge"))
         platform_name = request.POST.get("platform_name")
-        result_community = Community.objects.create(name=name, description=desc, author=request.user, console=platform_badge, platform_name=platform_name, is_usercreated=True)
+        is_priv = False
+        if request.POST.get("is_priv"):
+            is_priv = True
+        result_community = Community.objects.create(name=name, description=desc, author=request.user, console=platform_badge, platform_name=platform_name, is_usercreated=True, is_private=is_priv)
+        if is_priv == True:
+            Private_Community_Access.objects.create(user=request.user, community=result_community)
         return HttpResponse(f"/titles/{result_community.olive_title_id}/{result_community.olive_community_id}")
     data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"platform_badges":Platform_Badge.objects.all()}
     return render(request, f"{layout}/create_community.html", data)

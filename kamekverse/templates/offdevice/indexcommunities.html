@@ -221,7 +221,30 @@
       {% endfor %}
       </ul>
       <a href="./all_comm.php?type=special" class="big-button">Show More</a>
+      {% if user.is_authenticated and iscomfavs %}
+      <h3 class="community-title">My Private communities</h3>
+          <ul class="list community-list community-card-list special-community-list">
+          {% for community in private_communities %}
+          <li id="community-{{ community.community.olive_community_id }}" class="trigger test-community-list-item " tabindex="0">
+            {% if community.community.offdevice_banner %}
+        <img src="{{ community.community.offdevice_banner.url }}" class="community-list-cover">
+        {% endif %}
+        <div class="community-list-body">
+        <span class="icon-container"><img src="{{ community.community.offdevice_icon.url }}" class="icon"></span>
+        <div class="body">
+            <a class="title" href="{% if community.community.title.title_id %}/titles/{{ community.community.title.title_id }}/{{ community.community.olive_community_id }}{% else %}/titles/{{ community.community.olive_title_id }}/{{ community.community.olive_community_id }}{% endif%}" tabindex="-1">{{ community.community.name }}
+      </a>
+            
+              <span class="platform-tag"><img src="{{community.community.console.img.url}}"></span>
+            
+            <span class="text">{{ community.community.platform_name }}</span>
+        </div>
+        </div>
+      </li>
+      {% endfor %}
+      {% endif %}
       </ul>
+      <a href="./all_comm.php?type=special" class="big-button">Show More</a>
             </div>
             {% include 'offdevice/footer.html' %}
           </div>
