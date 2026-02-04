@@ -167,3 +167,6 @@ class Comment_Nah(models.Model):
 class Community_Favorite(models.Model):
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+class Private_Community_Access(models.Model):
+    community = models.ForeignKey(Community, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
