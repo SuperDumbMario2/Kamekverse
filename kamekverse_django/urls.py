@@ -27,6 +27,7 @@ urlpatterns = [
     path('titles/<int:olive_title_id>/<int:olive_community_id>/hot', views.community_hot),
     path('titles/<int:olive_title_id>/<int:olive_community_id>/cold', views.community_cold),
     path('titles/<int:olive_title_id>/<int:olive_community_id>/new', views.community),
+    path('titles/<int:olive_title_id>/<int:olive_community_id>/edit', views.community_editor),
     path('titles/<int:olive_title_id>/<int:olive_community_id>/favorite', views.communities_favorite_endpoint),
     path('titles/<int:olive_title_id>/<int:olive_community_id>/unfavorite', views.communities_unfavorite_endpoint),
     path('titles/<int:olive_title_id>/<int:olive_community_id>', views.community),
