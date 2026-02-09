@@ -87,13 +87,9 @@ def community(request, olive_title_id, olive_community_id):
         community = Community.objects.get(title=title, olive_community_id=olive_community_id)
     else:
         community = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
-    if community.is_private:
-        if request.user.is_authenticated:
-            allows = Private_Community_Access.objects.filter(user=request.user, community=community)
-            if not allows and not community.creator == request.user:
-                return HttpResponseForbidden("You cannot access this community!")
-        else:
-            return HttpResponseForbidden("You are not logged in!")
+    isaccess = IsCommunityAccess(request, community)
+    if not isaccess:
+        return HttpResponseForbidden("You cannot access this community!")
     posts = Post.objects.filter(community=community, is_hidden=False).order_by("-id")[offset:offset+50]
     is_favorited = False
     if request.user.is_authenticated:
@@ -118,7 +114,7 @@ def posts_endpoint(request):
             return HttpResponseForbidden("Not logged in!")
         if community.is_private:
             allows = Private_Community_Access.objects.filter(user=request.user, community=community)
-            if not allows and not community.creator == request.user:
+            if not allows and not community.author == request.user:
                 return HttpResponseForbidden("You cannot access this community!")
         creator = request.user
         feeling = request.POST.get("feeling_id")
@@ -241,6 +237,8 @@ def user(request, username):
             return HttpResponseForbidden(f"You aren't logged in!")
     useru = User.objects.get(username=username)
     posts = Post.objects.filter(creator=useru, community__is_private=False).order_by("-id")
+    if request.user.is_staff:
+        posts = Post.objects.filter(creator=useru).order_by("-id")
     requestinfo = PageStartRoutine(request)
     layout = requestinfo["layout"]
     if request.GET.get("offset"):
@@ -264,14 +262,7 @@ def user(request, username):
     return render(request, f"{layout}/user.html", data)
 def post(request, id):
     post = Post.objects.get(post_id=id)
-    iscommmunityaccessible = False
-    if request.user.is_authenticated:
-        myprivcomms = Private_Community_Access.objects.filter(user=request.user)
-        for c in myprivcomms:
-            if c == post.community:
-                iscommmunityaccessible = True
-    if post.community.is_private == False:
-        iscommmunityaccessible = True
+    iscommmunityaccessible = IsCommunityAccess(request, post.community)
     comments = Comment.objects.filter(post=post)
     requestinfo = PageStartRoutine(request)
     layout = requestinfo["layout"]
@@ -380,13 +371,9 @@ def community_hot(request, olive_title_id, olive_community_id):
         community = Community.objects.get(title=title, olive_community_id=olive_community_id)
     else:
         community = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
-    if community.is_private:
-        if request.user.is_authenticated:
-            allows = Private_Community_Access.objects.filter(user=request.user, community=community)
-            if not allows and not community.creator == request.user:
-                return HttpResponseForbidden("You cannot access this community!")
-        else:
-            return HttpResponseForbidden("You are not logged in!")
+    isaccess = IsCommunityAccess(request, community)
+    if not isaccess:
+        return HttpResponseForbidden("You cannot access this community!")
     posts = Post.objects.filter(community=community, is_hidden=False).order_by("-yeahs", "-replies", "nahs")[offset:offset+50]
     is_favorited = False
     if request.user.is_authenticated:
@@ -418,13 +405,9 @@ def community_cold(request, olive_title_id, olive_community_id):
         community = Community.objects.get(title=title, olive_community_id=olive_community_id)
     else:
         community = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
-    if community.is_private:
-        if request.user.is_authenticated:
-            allows = Private_Community_Access.objects.filter(user=request.user, community=community)
-            if not allows and not community.creator == request.user:
-                return HttpResponseForbidden("You cannot access this community!")
-        else:
-            return HttpResponseForbidden("You are not logged in!")
+    isaccess = IsCommunityAccess(request, community)
+    if not isaccess:
+        return HttpResponseForbidden("You cannot access this community!")
     posts = Post.objects.filter(community=community, is_hidden=False).order_by("yeahs", "-replies", "-nahs")[offset:offset+50]
     is_favorited = False
     if request.user.is_authenticated:
@@ -460,7 +443,7 @@ def post_delete(request, id):
     if not request.user.is_authenticated:
         return HttpResponseForbidden("log in pls")
     if request.user != post.creator and not request.user.is_staff:
-        return HttpResponseForbidden("no")
+        return HttpResponseForbidden("no sorry")
     post.is_hidden = True
     post.save()
     return HttpResponse()
@@ -582,6 +565,36 @@ def communities_unfavorite_endpoint(request, olive_title_id, olive_community_id)
             return HttpResponseForbidden("Not favorited!")
         else:
             return HttpResponseForbidden("Not logged in!")
+def community_editor(request, olive_title_id, olive_community_id):
+    requestinfo = PageStartRoutine(request)
+    communityobj = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
+    layout = requestinfo["layout"]
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    if not request.user == communityobj.author and not request.user.is_staff:
+        return HttpResponse("nah ur not doing that")
+    if request.method == "POST":
+        name = request.POST.get("community_name")
+        if len(name) > 127:
+            return HttpResponseForbidden()
+        desc = request.POST.get("community_desc")
+        if len(desc) > 255:
+            return HttpResponseForbidden()
+        if not name:
+            return HttpResponseForbidden()
+        platform_badge = Platform_Badge.objects.get(id=request.POST.get("platform_badge"))
+        platform_name = request.POST.get("platform_name")
+        is_priv = False
+        if request.POST.get("is_priv"):
+            is_priv = True
+        communityobj.name = name
+        communityobj.description = desc
+        communityobj.platform_badge = platform_badge
+        communityobj.platform_name = platform_name
+        communityobj.save()
+        return HttpResponse(f"/titles/{olive_title_id}/{olive_community_id}")
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"platform_badges":Platform_Badge.objects.all(),"community":communityobj}
+    return render(request, f"{layout}/edit_community.html", data)
 # API views (Kamekverse's custom API, the replica of Miiverse API will be in an extension just like the console UIs)
 
 

@@ -5049,7 +5049,7 @@ var Olv = Olv || {};
 		h(), a(document).on("click", ".apply-button", f), a(document).on("click", "#profile-post", g), a(document).on("change", "#favorite-game-genre select", h), e.done(function() {
 			a(document).off("click", ".apply-button", f), a(document).off("click", "#profile-post", g), a(document).off("change", "#favorite-game-genre select", h)
 		})
-	}),b.router.connect("^/communities/create", function(c, d, e) {
+	}),b.router.connect("^(?:/communities/create|/titles/\\d+/\\d+/edit)$", function(c, d, e) {
 		function f(c) {
 			var d = a(this),
 				e = d.closest("form");

@@ -73,6 +73,9 @@
                   {% endif %}
                 </div>
               </section>
+              {% if user.is_authenticated and community.creator == user or user.is_authenticated and user.is_staff %}
+              <a href="/titles/{{community.olive_title_id}}/{{community.olive_community_id}}/edit" class="button">Edit</a>
+              {% endif %}
             </div>
             
             
