@@ -595,7 +595,26 @@ def community_editor(request, olive_title_id, olive_community_id):
         return HttpResponse(f"/titles/{olive_title_id}/{olive_community_id}")
     data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"platform_badges":Platform_Badge.objects.all(),"community":communityobj}
     return render(request, f"{layout}/edit_community.html", data)
-# API views (Kamekverse's custom API, the replica of Miiverse API will be in an extension just like the console UIs)
+def community_editor_icon(request, olive_title_id, olive_community_id):
+    requestinfo = PageStartRoutine(request)
+    communityobj = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
+    layout = requestinfo["layout"]
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    if not request.user == communityobj.author and not request.user.is_staff:
+        return HttpResponse("nah ur not doing that")
+    if request.method == "POST":
+        icon = request.FILES.get("icon")
+        if icon:
+            communityobj.offdevice_icon = icon
+        banner = request.FILES.get("banner")
+        if banner:
+            communityobj.offdevice_banner = banner
+        communityobj.save()
+        return redirect(f"/titles/{olive_title_id}/{olive_community_id}")
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"community":communityobj}
+    return render(request, f"{layout}/edit_community_icon.html", data)
+# API views (Kamekverse's custom API, the replica of Miiverse API may be in an extension just like the console UIs if i will ever get to make it)
 
 
 # Returns basic server config.
