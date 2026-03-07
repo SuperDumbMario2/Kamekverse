@@ -684,7 +684,7 @@ def api_user_profile(request, username):
     if miimethod == "mii-ariankordi":
         miimethod = "mii-data"
     if miimethod != "mii-data" and miimethod != "mii-nnid" and miimethod != "mii-pnid":
-        miimethod = "placeholderpfp"
+        miimethod = "empty"
     resp = JsonResponse({'result': 200, 'username': user.username, 'mii_name': user.profile.mii_name, 'mii_method': miimethod, 'mii_value': user.profile.pfp_value, 'bio': user.profile.bio, 'follower_count': user.profile.follower_count, 'friend_count': user.profile.friend_count, 'follow_count': user.profile.follow_count, 'game_experience': user.profile.game_experience, 'karma': user.profile.karma})
     resp["Access-Control-Allow-Origin"] = "*"
     resp["Access-Control-Allow-Methods"] = "*"

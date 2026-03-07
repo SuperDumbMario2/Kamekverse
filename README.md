@@ -28,3 +28,9 @@ Run server (if localhosting):
 Log into the superuser acc, go to [kamekverse instance domain, 127.0.0.1:8000 if you're localhosting]/admin/, create an platform badge so the communities' platform badge settings not glitch out. You can use an empty image, you can take the badges from the PHP version: https://github.com/SuperDumbMario2/KamekversePHP/tree/master/cdn/community_flair_icons
 
 Once you did this, it's mostly complete. Create communities, add themes, etc.
+
+## API
+
+Kamekverse has a custom API (NOT A REPLICA OF THE ORIGINAL MIIVERSE API).
+
+You can find it's documentation in API.md
