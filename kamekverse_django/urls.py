@@ -57,4 +57,6 @@ urlpatterns = [
     path('settings/account', views.settings_account),
     path('communities/create', views.create_community),
     path('admin/', admin.site.urls),
+    path('api/community/<int:olive_title_id>/<int:olive_community_id>/posts', views.api_community_posts),
+    path('api/user/<str:username>/profile', views.api_user_profile),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

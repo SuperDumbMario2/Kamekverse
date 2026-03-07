@@ -619,4 +619,74 @@ def community_editor_icon(request, olive_title_id, olive_community_id):
 
 # Returns basic server config.
 def api_server_config(request):
-    return JsonResponse({'server_name': settings.APP_NAME, 'is_production': settings.IS_PROD, 'is_development': settings.IS_DEV, 'env_name': settings.ENV_NAME, 'env_id': settings.ENV_ID})
+    resp = JsonResponse({'server_name': settings.APP_NAME, 'is_production': settings.IS_PROD, 'is_development': settings.IS_DEV, 'env_name': settings.ENV_NAME, 'env_id': settings.ENV_ID})
+    resp["Access-Control-Allow-Origin"] = "*"
+    resp["Access-Control-Allow-Methods"] = "*"
+    resp["Access-Control-Allow-Headers"] = "*" 
+    return resp
+
+# Returns posts in a community.
+def api_community_posts(request, olive_title_id, olive_community_id):
+    amount = 200
+    if request.GET.get("amount"):
+        amount = int(request.GET.get("amount"))
+    if Community.objects.filter(olive_title_id=olive_title_id, olive_community_id=olive_community_id).exists() == False:
+        resp = JsonResponse({'result': 404})
+        resp["Access-Control-Allow-Origin"] = "*"
+        resp["Access-Control-Allow-Methods"] = "*"
+        resp["Access-Control-Allow-Headers"] = "*" 
+        resp.status_code = 404
+        return resp
+    community = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
+    if community.is_private:
+        resp = JsonResponse({'result': 403})
+        resp["Access-Control-Allow-Origin"] = "*"
+        resp["Access-Control-Allow-Methods"] = "*"
+        resp["Access-Control-Allow-Headers"] = "*" 
+        resp.status_code = 403
+        return resp
+    if amount == "all":
+        posts = Post.objects.filter(community=community, is_hidden=False).order_by("-id")
+    else:
+        posts = Post.objects.filter(community=community, is_hidden=False).order_by("-id")[:amount]
+    postsjson = []
+    for post in posts:
+        postjson = {"id": post.post_id, "author": post.creator.username, "body": post.body, "yeah": post.yeahs, "nah": post.nahs, "mii_expression": post.feeling, "is_spoiler": post.is_spoiler, "is_featured": post.is_featured, "replies": post.replies}
+        if post.is_image:
+            postjson["is_image"] = True
+            postjson["image"] = post.image.url
+        else:
+            postjson["is_image"] = False
+        postsjson.append(postjson)
+    resp = JsonResponse({'result': 200, 'posts': postsjson})
+    resp["Access-Control-Allow-Origin"] = "*"
+    resp["Access-Control-Allow-Methods"] = "*"
+    resp["Access-Control-Allow-Headers"] = "*"
+    return resp
+
+def api_user_profile(request, username):
+    if User.objects.filter(username=username).exists() == False:
+        resp = JsonResponse({'result': 404})
+        resp["Access-Control-Allow-Origin"] = "*"
+        resp["Access-Control-Allow-Methods"] = "*"
+        resp["Access-Control-Allow-Headers"] = "*" 
+        resp.status_code = 404
+        return resp
+    user = User.objects.get(username=username)
+    if user.profile.ban:
+        resp = JsonResponse({'result': 403})
+        resp["Access-Control-Allow-Origin"] = "*"
+        resp["Access-Control-Allow-Methods"] = "*"
+        resp["Access-Control-Allow-Headers"] = "*" 
+        resp.status_code = 403
+        return resp
+    miimethod = user.profile.pfp_method
+    if miimethod == "mii-ariankordi":
+        miimethod = "mii-data"
+    if miimethod != "mii-data" and miimethod != "mii-nnid" and miimethod != "mii-pnid":
+        miimethod = "placeholderpfp"
+    resp = JsonResponse({'result': 200, 'username': user.username, 'mii_name': user.profile.mii_name, 'mii_method': miimethod, 'mii_value': user.profile.pfp_value, 'bio': user.profile.bio, 'follower_count': user.profile.follower_count, 'friend_count': user.profile.friend_count, 'follow_count': user.profile.follow_count, 'game_experience': user.profile.game_experience, 'karma': user.profile.karma})
+    resp["Access-Control-Allow-Origin"] = "*"
+    resp["Access-Control-Allow-Methods"] = "*"
+    resp["Access-Control-Allow-Headers"] = "*" 
+    return resp
