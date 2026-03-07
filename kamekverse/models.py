@@ -89,7 +89,7 @@ class Post(models.Model):
     yeahs = models.IntegerField(default=0) # Yeah amount
     nahs = models.IntegerField(default=0) # Nah amount
     replies = models.IntegerField(default=0) # reply amount
-    feeling = models.TextField(default="normal") # Feeling'
+    feeling = models.TextField(default="normal") # Feeling
     is_spoiler = models.BooleanField(default=False) # Is it a spoiler?
     creation_date = models.DateTimeField(auto_now_add=True)# Date of the post's creation
     is_image = models.BooleanField(default=False) # Used for the sampler so it will not be that the sampler placeholder is pinned to everything
