@@ -149,6 +149,86 @@ Set game experience, lowercase.
 
 Amount of Mii Coins.
 
+## `/api/community/<olive_title_id>/<olive_community_id>/metadata`
+
+This endpoint will return metadata of a public (!) community.
+
+Example: `{"result": 200, "name": "Test API community", "desc": "", "is_locked": false, "is_redesigned": false, "platform_name": "", "max_post_length": 2200, "max_comment_length": 2200, "is_special": false, "is_featured": false, "allow_comments": true, "offdevice_icon": "/cdn/community_icons/default.png", "has_badge": false, "console": 1, "author": "superdumbmario2"}`
+
+### `result`
+
+200 if successful.
+
+404 if you try to obtain data from a non-existent community.
+
+403 if you try to obtain data from a private community.
+
+### `name`
+
+Community name.
+
+### `desc`
+
+Community description.
+
+### `is_locked`
+
+Can normal users post to it? true if no, false if yes
+
+### `is_redesigned`
+
+when/if i will add redesign features to kamekverse, this will be used to determine if a community will use redesign features.
+
+### `platform_name`
+
+Platform name.
+
+### `max_post_length`
+
+Max length of posts.
+
+### `max_comment_length`
+
+Max length of comments.
+
+### `is_special`
+
+Is the community on the special tab?
+
+### `is_featured`
+
+Is the community on the featured tab?
+
+### `allow_comments`
+
+Can you post comments on posts in this community?
+
+### `offdevice_icon`
+
+Path to the Community icon on offdevice and neo layouts. Note that it doesn't include the URL to the instance.
+
+### `has_badge`
+
+Does it have a blue badge?
+
+### `badge`
+
+Only exists if `has_badge` is `true`.
+
+Contents of the blue badge.
+
+### `console`
+
+The ID of the console badge if the community has it. Currently unusable.
+
+### `author`
+
+If the community is user-created or an author acc was passed thru the admin panel, this will show the username of the author.
+
+### `offdevice_banner`
+
+If the community has it, it will link to the banner used on offdevice and neo layouts. Note that it doesn't include the URL to the instance.
+
 ## Notes
 
 To get the `olive_title_id` and `olive_community_id` values of a community, you just need to go to that community's page and look at the url.

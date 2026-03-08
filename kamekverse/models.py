@@ -93,7 +93,7 @@ class Post(models.Model):
     is_spoiler = models.BooleanField(default=False) # Is it a spoiler?
     creation_date = models.DateTimeField(auto_now_add=True)# Date of the post's creation
     is_image = models.BooleanField(default=False) # Used for the sampler so it will not be that the sampler placeholder is pinned to everything
-    image = models.ImageField(upload_to="post_images/", default="post_images/sampler_placeholder.png") # An image
+    image = models.ImageField(upload_to="post_images/", default="post_images/sampler_placeholder.png", blank=True) # An image
     screenshot = models.TextField(null=True, blank=True) # b64 screenshot value. Kept for Miiverse accuracy
     post_file = models.ImageField(upload_to="post_files/", null=True, blank=True) # Other file types
     is_featured = models.BooleanField(default=False) # Is the post featured AKA used on the homepage sampler?
