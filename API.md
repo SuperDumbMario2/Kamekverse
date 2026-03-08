@@ -229,6 +229,12 @@ If the community is user-created or an author acc was passed thru the admin pane
 
 If the community has it, it will link to the banner used on offdevice and neo layouts. Note that it doesn't include the URL to the instance.
 
+## `/api/community/list`
+
+Example: `[{"olive_title_id": 0, "olive_community_id": 0}, {"olive_title_id": 1, "olive_community_id": 1}, {"olive_title_id": 2, "olive_community_id": 2}, {"olive_title_id": 3, "olive_community_id": 3}, {"olive_title_id": 4, "olive_community_id": 4}]`
+
+This endpoint returns a list of every public (!) community as olive_title_id and olive_community_id.
+
 ## Notes
 
 To get the `olive_title_id` and `olive_community_id` values of a community, you just need to go to that community's page and look at the url.
