@@ -727,3 +727,14 @@ def api_community_metadata(request, olive_title_id, olive_community_id):
     resp["Access-Control-Allow-Methods"] = "*"
     resp["Access-Control-Allow-Headers"] = "*"
     return resp
+
+def api_community_list(request):
+    communities = Community.objects.filter(is_private=False)
+    output = []
+    for c in communities:
+        output.append({"olive_title_id": int(c.olive_title_id), "olive_community_id": int(c.olive_community_id)})
+    resp = JsonResponse(output, safe=False)
+    resp["Access-Control-Allow-Origin"] = "*"
+    resp["Access-Control-Allow-Methods"] = "*"
+    resp["Access-Control-Allow-Headers"] = "*"
+    return resp
