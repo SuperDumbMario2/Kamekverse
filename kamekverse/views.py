@@ -629,7 +629,9 @@ def api_server_config(request):
 def api_community_posts(request, olive_title_id, olive_community_id):
     amount = 200
     if request.GET.get("amount"):
-        amount = int(request.GET.get("amount"))
+        amount = request.GET.get("amount")
+    if amount != "all":
+        amount = int(amount)
     if Community.objects.filter(olive_title_id=olive_title_id, olive_community_id=olive_community_id).exists() == False:
         resp = JsonResponse({'result': 404})
         resp["Access-Control-Allow-Origin"] = "*"
@@ -689,4 +691,39 @@ def api_user_profile(request, username):
     resp["Access-Control-Allow-Origin"] = "*"
     resp["Access-Control-Allow-Methods"] = "*"
     resp["Access-Control-Allow-Headers"] = "*" 
+    return resp
+
+
+def api_community_metadata(request, olive_title_id, olive_community_id):
+    if Community.objects.filter(olive_title_id=olive_title_id, olive_community_id=olive_community_id).exists() == False:
+        resp = JsonResponse({'result': 404})
+        resp["Access-Control-Allow-Origin"] = "*"
+        resp["Access-Control-Allow-Methods"] = "*"
+        resp["Access-Control-Allow-Headers"] = "*" 
+        resp.status_code = 404
+        return resp
+    community = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
+    if community.is_private:
+        resp = JsonResponse({'result': 403})
+        resp["Access-Control-Allow-Origin"] = "*"
+        resp["Access-Control-Allow-Methods"] = "*"
+        resp["Access-Control-Allow-Headers"] = "*" 
+        resp.status_code = 403
+        return resp
+    outjson = {'result': 200, 'name': community.name, 'desc': community.description, 'is_locked': community.is_locked, 'is_redesigned': community.is_redesigned, 'platform_name': community.platform_name, 'max_post_length': community.maxpostlength, 'max_comment_length': community.maxcommentlength, 'is_special': community.is_special, 'is_featured': community.is_featured, 'allow_comments': community.allow_comments, 'offdevice_icon': community.offdevice_icon.url}
+    if community.has_badge:
+        outjson['has_badge'] = community.has_badge
+        outjson['badge'] = community.badge
+    else:
+        outjson['has_badge'] = community.has_badge
+    if community.console:
+        outjson['console'] = community.console.id
+    if community.author:
+        outjson['author'] = community.author.username
+    if community.offdevice_banner:
+        outjson['offdevice_banner'] = community.offdevice_banner.url
+    resp = JsonResponse(outjson)
+    resp["Access-Control-Allow-Origin"] = "*"
+    resp["Access-Control-Allow-Methods"] = "*"
+    resp["Access-Control-Allow-Headers"] = "*"
     return resp
