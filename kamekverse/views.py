@@ -738,3 +738,32 @@ def api_community_list(request):
     resp["Access-Control-Allow-Methods"] = "*"
     resp["Access-Control-Allow-Headers"] = "*"
     return resp
+
+def community_editor_whitelist(request, olive_title_id, olive_community_id):
+    requestinfo = PageStartRoutine(request)
+    communityobj = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
+    layout = requestinfo["layout"]
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    if not request.user == communityobj.author and not request.user.is_staff:
+        return HttpResponse("nah ur not doing that")
+    if not communityobj.is_private:
+        return HttpResponse("this doesn't need the whitelist")
+    if request.method == "POST":
+        requesttype = request.POST.get("type")
+        if requesttype == "add":
+            if User.objects.filter(username=request.POST.get("username")).exists():
+                user = User.objects.get(username=request.POST.get("username"))
+                Private_Community_Access.objects.create(user=user, community=communityobj)
+            else:
+                return HttpResponse("Invalid username")
+        elif requesttype == "remove":
+            if Private_Community_Access.objects.filter(user=User.objects.get(username=request.POST.get("username")), community=communityobj).exists():
+                user = User.objects.get(username=request.POST.get("username"))
+                Private_Community_Access.objects.get(user=user, community=communityobj).delete()
+        else:
+            return HttpResponse("Invalid method")
+        return redirect(f"/titles/{olive_title_id}/{olive_community_id}/edit/whitelist")
+    whitelist = User.objects.filter(private_community_access__community=communityobj)
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"community":communityobj,"whitelist_users":whitelist}
+    return render(request, f"{layout}/edit_community_whitelist.html", data)

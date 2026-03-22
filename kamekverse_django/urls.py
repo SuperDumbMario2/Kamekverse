@@ -29,6 +29,7 @@ urlpatterns = [
     path('titles/<int:olive_title_id>/<int:olive_community_id>/new', views.community),
     path('titles/<int:olive_title_id>/<int:olive_community_id>/edit', views.community_editor),
     path('titles/<int:olive_title_id>/<int:olive_community_id>/edit/icon', views.community_editor_icon),
+    path('titles/<int:olive_title_id>/<int:olive_community_id>/edit/whitelist', views.community_editor_whitelist),
     path('titles/<int:olive_title_id>/<int:olive_community_id>/favorite', views.communities_favorite_endpoint),
     path('titles/<int:olive_title_id>/<int:olive_community_id>/unfavorite', views.communities_unfavorite_endpoint),
     path('titles/<int:olive_title_id>/<int:olive_community_id>', views.community),
