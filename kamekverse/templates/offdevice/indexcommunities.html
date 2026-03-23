@@ -109,7 +109,7 @@
           <button type="button" class="symbol submit empathy-button" data-feeling="normal" data-action="/posts/{{ post.post_id }}/empathies" data-community-id="{{ post.community.olive_community_id }}" data-url-id="{{ post.post_id }}" data-track-label="topic_post" data-title-id="{{ post.community.olive_title_id }}" data-track-action="yeah" data-track-category="empathy"><span class="empathy-button-text">Yeah!</span></button>
           <div class="empathy symbol"><span class="symbol-label">Yeahs Given</span><span class="empathy-count">{{ post.yeahs }}</span></div>
           <div class="nah symbol"><span class="symbol-label">Nahs Given</span><span class="nah-count">{{ post.nahs }}</span></div>
-          <div class="reply symbol"><span class="symbol-label">Comments</span><span class="reply-count">16</span></div>
+          <div class="reply symbol"><span class="symbol-label">Comments</span><span class="reply-count">{{post.replies}}</span></div>
         </div>
     </div>
   </div>
