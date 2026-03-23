@@ -59,10 +59,11 @@
           <div id="community-eyecatch">
             <div id="community-eyecatch-main">
               {% for post in featured_posts %}
+              {% if post.is_image %}
                 <div class="eyecatch-diary-post js-eyecatch-diary-post test-eyecatch-diary-post {% if forloop.counter != 1 %}invisible{% endif %}" data-index="{{ forloop.counter }}">
                   <a href="/posts/{{ post.post_id }}" class="community-eyecatch-image test-community-eyecatch-image" style="background-image: url('{{ post.image.url }}')">
                     <span class="icon-container">
-                      <img src="{% if post.creator.profile.pfp_method == 'mii-nnid' or post.creator.profile.pfp_method == 'mii-pnid' or post.creator.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if post.creator.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ post.creator.profile.pfp_value }}{% if post.creator.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression={{post.feeling}}{% else %}{% static 'neo/unknown_mii.png' %}{% endif %}" alt="profile" class="icon community-eyecatch-usericon test-community-eyecatch-usericon">
+                      <img src="{% if post.creator.profile.pfp_method == 'mii-nnid' or post.creator.profile.pfp_method == 'mii-pnid' or post.creator.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if post.creator.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ post.creator.profile.pfp_value }}{% if post.creator.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression={{post.feeling}}{% else %}{% static 'offdevice/unknown_mii.png' %}{% endif %}" alt="profile" class="icon community-eyecatch-usericon test-community-eyecatch-usericon">
                     </span>
                     <p class="community-eyecatch-balloon test-community-eyecatch-balloon"><span>{{ post.body }}</span></p>
                   </a>
@@ -75,6 +76,7 @@
                     </p>
                   </a>
                 </div>
+                {% endif %}
               {% endfor %}      </div>
           </div>
         </div>
@@ -87,7 +89,35 @@
               <span class="title">Get the latest news here!</span>
               <span class="text">Posts from Verified Users</span>
             </a>
-          </div>      </div>
+          </div>
+        <div class="digest-container">
+      <h3 class="community-title symbol">Featured posts</h3>
+      <div class="digest">
+        {% for post in featured_posts %}
+        {% if not post.is_image %}
+        <div id="post-{{post.post_id}}" data-href="/posts/{{post.post_id}}" class="post post-subtype-topic trigger" tabindex="0">  
+  <p class="community-container">
+    <a class="test-community-link" href="{% if post.community.title.title_id %}/titles/{{ post.community.title.title_id }}/{{ post.community.olive_community_id }}{% else %}/titles/{{ post.community.olive_title_id }}/{{ post.community.olive_community_id }}{% endif%}"><img src="https://web.archive.org/web/20171005101457im_/https://d3esbfg30x759i.cloudfront.net/o3p/WVW69kpvKPsxUq7jLd" class="community-icon">Pokémon Gold/Silver Version Community </a></p>
+    <a href="/users/{{ post.creator.username }}" class="icon-container"><img src="{% if post.creator.profile.pfp_method == 'mii-nnid' or post.creator.profile.pfp_method == 'mii-pnid' or post.creator.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if post.creator.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ post.creator.profile.pfp_value }}{% if post.creator.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression={{post.feeling}}{% else %}{% static 'offdevice/unknown_mii.png' %}{% endif %}" class="icon"></a>
+  <p class="user-name"><a href="/users/{{ post.creator.username }}">{{post.creator.profile.displayname}}</a></p>
+    <p class="timestamp-container">
+      <a class="timestamp" href="/posts/{{ post.post_id }}">{{post.creation_date}}</a>
+    </p>  <div class="body">
+    <div class="post-content">        <div class="tag-container"></div>
+          <p class="post-content-text topic-title test-topic-title">{{ post.body}}</p>
+          <p class="post-content-text topic-body test-topic-body">sexexexexex</p><div class="post-meta">
+          <button type="button" class="symbol submit empathy-button" data-feeling="normal" data-action="/posts/{{ post.post_id }}/empathies" data-community-id="{{ post.community.olive_community_id }}" data-url-id="{{ post.post_id }}" data-track-label="topic_post" data-title-id="{{ post.community.olive_title_id }}" data-track-action="yeah" data-track-category="empathy"><span class="empathy-button-text">Yeah!</span></button>
+          <div class="empathy symbol"><span class="symbol-label">Yeahs Given</span><span class="empathy-count">{{ post.yeahs }}</span></div>
+          <div class="nah symbol"><span class="symbol-label">Nahs Given</span><span class="nah-count">{{ post.nahs }}</span></div>
+          <div class="reply symbol"><span class="symbol-label">Comments</span><span class="reply-count">16</span></div>
+        </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+        {% endfor %}
+</div>
+    </div>      </div>
       
         <div class="community-main">
           {% if user.is_authenticated and iscomfavs %}
