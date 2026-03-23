@@ -121,7 +121,7 @@
       
         <div class="community-main">
           {% if user.is_authenticated and iscomfavs %}
-          <h3 class="community-title symbol community-favorite-title">Favorite communities</h3>
+          <h3 class="community-title symbol community-title-fav"><span>Favorite communities</span></h3>
           <div class="card" id="community-favorite">
             <ul>
               {% for community in mycommfavs %}
@@ -138,7 +138,7 @@
             </ul>
           </div>
           {% endif %}
-        <h3 class="community-title symbol">Featured Communities</h3>
+        <h3 class="community-title symbol community-title-3ds"><span>Featured Communities</span></h3>
         <div><ul class="list community-list community-card-list test-hot-communities">
           {% for community in featured_communities %}
       <li id="community-{{ community.olive_community_id }}" class="trigger test-community-list-item " tabindex="0">
@@ -164,7 +164,7 @@
             
             
       
-                <h3 class="community-title symbol">
+                <h3 class="community-title symbol community-title-wiiu">
               <span>New Communities</span></h3>
       
             <div>
@@ -198,7 +198,7 @@
             
             
       
-      <h3 class="community-title symbol">
+      <h3 class="community-title symbol community-title-other">
       <span>User-Generated Communities</span></h3>
       
       <div>
@@ -229,7 +229,7 @@
       </div>
       
             
-          <h3 class="community-title">Special</h3>
+          <h3 class="community-title symbol community-title-special"><span>Special</span></h3>
           <ul class="list community-list community-card-list special-community-list">
           {% for community in special_communities %}
           <li id="community-{{ community.olive_community_id }}" class="trigger test-community-list-item " tabindex="0">
@@ -252,7 +252,7 @@
       </ul>
       <a href="./all_comm.php?type=special" class="big-button">Show More</a>
       {% if user.is_authenticated and iscomfavs %}
-      <h3 class="community-title">My Private communities</h3>
+      <h3 class="community-title community-title-other"><span>My Private communities</span></h3>
           <ul class="list community-list community-card-list special-community-list">
           {% for community in private_communities %}
           <li id="community-{{ community.community.olive_community_id }}" class="trigger test-community-list-item " tabindex="0">
