@@ -170,3 +170,8 @@ class Community_Favorite(models.Model):
 class Private_Community_Access(models.Model):
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+class API_Token(models.Model):
+    account = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=127)
+    token_hash = models.CharField(max_length=64)
+    is_usable = models.BooleanField(default=True)

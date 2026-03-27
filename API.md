@@ -31,6 +31,14 @@ This endpoint will return posts from an public (!) community. You can give it a 
 
 Example: `{"result": 200, "posts": [{"id": "AYMHAABBCAfnoS5ScY9mtw", "author": "superdumbmario2", "body": "Test post with an image", "yeah": 0, "nah": 0, "mii_expression": "happy", "is_spoiler": false, "is_featured": false, "replies": 0, "is_image": true, "image": "/cdn/post_images/6df90ed638bc41618ed8a97cd8b17ff4.png"}, {"id": "AYMHAABBuGW4DQiMm88I3g", "author": "superdumbmario2", "body": "Test post without an image", "yeah": 0, "nah": 0, "mii_expression": "normal", "is_spoiler": false, "is_featured": false, "replies": 0, "is_image": false}]}`
 
+### Auth
+
+You need an API key to access private communities' metadata.
+
+Just pass in an `Authorization` header with value of `Beaver <api key>`, replacing <api key> with your own Kamekverse API key.
+
+You only can do this if you are whitelisted in the said community.
+
 ### `result`
 
 200 if successful.
@@ -151,9 +159,17 @@ Amount of Mii Coins.
 
 ## `/api/community/<olive_title_id>/<olive_community_id>/metadata`
 
-This endpoint will return metadata of a public (!) community.
+This endpoint will return metadata of a community.
 
 Example: `{"result": 200, "name": "Test API community", "desc": "", "is_locked": false, "is_redesigned": false, "platform_name": "", "max_post_length": 2200, "max_comment_length": 2200, "is_special": false, "is_featured": false, "allow_comments": true, "offdevice_icon": "/cdn/community_icons/default.png", "has_badge": false, "console": 1, "author": "superdumbmario2"}`
+
+### Auth
+
+You need an API key to access private communities' metadata.
+
+Just pass in an `Authorization` header with value of `Beaver <api key>`, replacing <api key> with your own Kamekverse API key.
+
+You only can do this if you are whitelisted in the said community.
 
 ### `result`
 
