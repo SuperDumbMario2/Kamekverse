@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.http import HttpResponseForbidden, JsonResponse, HttpResponseBadRequest, FileResponse
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from django.contrib.auth import authenticate, login as login_auth, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Exists, OuterRef
@@ -13,6 +13,7 @@ import requests
 import re
 import base64
 import uuid
+import hashlib
 
 # Create your views here.
 # offdevice views
@@ -236,7 +237,7 @@ def user(request, username):
         else:
             return HttpResponseForbidden(f"You aren't logged in!")
     useru = User.objects.get(username=username)
-    posts = Post.objects.filter(creator=useru, community__is_private=False).order_by("-id")
+    posts = Post.objects.filter(creator=useru, community__is_private=False, is_hidden=False).order_by("-id")
     if request.user.is_staff:
         posts = Post.objects.filter(creator=useru).order_by("-id")
     requestinfo = PageStartRoutine(request)
@@ -614,6 +615,89 @@ def community_editor_icon(request, olive_title_id, olive_community_id):
         return redirect(f"/titles/{olive_title_id}/{olive_community_id}")
     data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"community":communityobj}
     return render(request, f"{layout}/edit_community_icon.html", data)
+
+def community_editor_whitelist(request, olive_title_id, olive_community_id):
+    requestinfo = PageStartRoutine(request)
+    communityobj = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
+    layout = requestinfo["layout"]
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    if not request.user == communityobj.author and not request.user.is_staff:
+        return HttpResponse("nah ur not doing that")
+    if not communityobj.is_private:
+        return HttpResponse("this doesn't need the whitelist")
+    if request.method == "POST":
+        requesttype = request.POST.get("type")
+        if requesttype == "add":
+            if User.objects.filter(username=request.POST.get("username")).exists():
+                user = User.objects.get(username=request.POST.get("username"))
+                Private_Community_Access.objects.create(user=user, community=communityobj)
+            else:
+                return HttpResponse("Invalid username")
+        elif requesttype == "remove":
+            if Private_Community_Access.objects.filter(user=User.objects.get(username=request.POST.get("username")), community=communityobj).exists():
+                user = User.objects.get(username=request.POST.get("username"))
+                Private_Community_Access.objects.get(user=user, community=communityobj).delete()
+        else:
+            return HttpResponse("Invalid method")
+        return redirect(f"/titles/{olive_title_id}/{olive_community_id}/edit/whitelist")
+    whitelist = User.objects.filter(private_community_access__community=communityobj)
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"community":communityobj,"whitelist_users":whitelist}
+    return render(request, f"{layout}/edit_community_whitelist.html", data)
+
+def settings_api_keys(request):
+    requestinfo = PageStartRoutine(request)
+    layout = requestinfo["layout"]
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    keys = API_Token.objects.filter(account=request.user)
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"api_keys":keys}
+    return render(request, f"{layout}/api_keys_list.html", data)
+
+def settings_api_new(request):
+    requestinfo = PageStartRoutine(request)
+    layout = requestinfo["layout"]
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    if request.method == "POST":
+        token_key = new_api_key()
+        if request.POST.get("key_name"):
+            name = request.POST.get("key_name")
+            token_hash = hashlib.sha256(token_key.encode()).hexdigest()
+            token_obj = API_Token.objects.create(account=request.user, name=name, token_hash=token_hash)
+        data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"api_token":token_key}
+        return render(request, f"{layout}/api_keys_new.html", data)
+    else:
+        return HttpResponse("Invalid request")
+
+def settings_api_toggle_activate(request, id):
+    requestinfo = PageStartRoutine(request)
+    layout = requestinfo["layout"]
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    key = API_Token.objects.get(id=id)
+    if key.account == request.user:
+        key.is_usable = not key.is_usable
+        key.save()
+    else:
+        return HttpResponse("You don't own this key")
+    return redirect("/settings/api/keys")
+
+def settings_api_regenerate(request, id):
+    requestinfo = PageStartRoutine(request)
+    layout = requestinfo["layout"]
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    key = API_Token.objects.get(id=id)
+    if key.account == request.user:
+        token_key = new_api_key()
+        token_hash = hashlib.sha256(token_key.encode()).hexdigest()
+        key.token_hash = token_hash
+    else:
+        return HttpResponse("You don't own this key")
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"api_token":token_key}
+    return render(request, f"{layout}/api_keys_new.html", data)
+
 # API views (Kamekverse's custom API, the replica of Miiverse API may be in an extension just like the console UIs if i will ever get to make it)
 
 
@@ -640,13 +724,27 @@ def api_community_posts(request, olive_title_id, olive_community_id):
         resp.status_code = 404
         return resp
     community = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
+    user = GetAPIUser(request)
     if community.is_private:
-        resp = JsonResponse({'result': 403})
-        resp["Access-Control-Allow-Origin"] = "*"
-        resp["Access-Control-Allow-Methods"] = "*"
-        resp["Access-Control-Allow-Headers"] = "*" 
-        resp.status_code = 403
-        return resp
+        if not user.is_authenticated:
+            resp = JsonResponse({'result': 403})
+            resp["Access-Control-Allow-Origin"] = "*"
+            resp["Access-Control-Allow-Methods"] = "*"
+            resp["Access-Control-Allow-Headers"] = "*" 
+            resp.status_code = 403
+            return resp
+        else:
+            access = Private_Community_Access.objects.filter(user=user)
+            accessids = []
+            for a in access:
+                accessids.append(a.community.community_id)
+            if not community.community_id in accessids:
+                resp = JsonResponse({'result': 403})
+                resp["Access-Control-Allow-Origin"] = "*"
+                resp["Access-Control-Allow-Methods"] = "*"
+                resp["Access-Control-Allow-Headers"] = "*" 
+                resp.status_code = 403
+                return resp
     if amount == "all":
         posts = Post.objects.filter(community=community, is_hidden=False).order_by("-id")
     else:
@@ -703,13 +801,27 @@ def api_community_metadata(request, olive_title_id, olive_community_id):
         resp.status_code = 404
         return resp
     community = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
+    user = GetAPIUser(request)
     if community.is_private:
-        resp = JsonResponse({'result': 403})
-        resp["Access-Control-Allow-Origin"] = "*"
-        resp["Access-Control-Allow-Methods"] = "*"
-        resp["Access-Control-Allow-Headers"] = "*" 
-        resp.status_code = 403
-        return resp
+        if not user.is_authenticated:
+            resp = JsonResponse({'result': 403})
+            resp["Access-Control-Allow-Origin"] = "*"
+            resp["Access-Control-Allow-Methods"] = "*"
+            resp["Access-Control-Allow-Headers"] = "*" 
+            resp.status_code = 403
+            return resp
+        else:
+            access = Private_Community_Access.objects.filter(user=user)
+            accessids = []
+            for a in access:
+                accessids.append(a.community.community_id)
+            if not community.community_id in accessids:
+                resp = JsonResponse({'result': 403})
+                resp["Access-Control-Allow-Origin"] = "*"
+                resp["Access-Control-Allow-Methods"] = "*"
+                resp["Access-Control-Allow-Headers"] = "*" 
+                resp.status_code = 403
+                return resp
     outjson = {'result': 200, 'name': community.name, 'desc': community.description, 'is_locked': community.is_locked, 'is_redesigned': community.is_redesigned, 'platform_name': community.platform_name, 'max_post_length': community.maxpostlength, 'max_comment_length': community.maxcommentlength, 'is_special': community.is_special, 'is_featured': community.is_featured, 'allow_comments': community.allow_comments, 'offdevice_icon': community.offdevice_icon.url}
     if community.has_badge:
         outjson['has_badge'] = community.has_badge
@@ -738,32 +850,3 @@ def api_community_list(request):
     resp["Access-Control-Allow-Methods"] = "*"
     resp["Access-Control-Allow-Headers"] = "*"
     return resp
-
-def community_editor_whitelist(request, olive_title_id, olive_community_id):
-    requestinfo = PageStartRoutine(request)
-    communityobj = Community.objects.get(olive_title_id=olive_title_id, olive_community_id=olive_community_id)
-    layout = requestinfo["layout"]
-    if not request.user.is_authenticated:
-        return redirect("/login")
-    if not request.user == communityobj.author and not request.user.is_staff:
-        return HttpResponse("nah ur not doing that")
-    if not communityobj.is_private:
-        return HttpResponse("this doesn't need the whitelist")
-    if request.method == "POST":
-        requesttype = request.POST.get("type")
-        if requesttype == "add":
-            if User.objects.filter(username=request.POST.get("username")).exists():
-                user = User.objects.get(username=request.POST.get("username"))
-                Private_Community_Access.objects.create(user=user, community=communityobj)
-            else:
-                return HttpResponse("Invalid username")
-        elif requesttype == "remove":
-            if Private_Community_Access.objects.filter(user=User.objects.get(username=request.POST.get("username")), community=communityobj).exists():
-                user = User.objects.get(username=request.POST.get("username"))
-                Private_Community_Access.objects.get(user=user, community=communityobj).delete()
-        else:
-            return HttpResponse("Invalid method")
-        return redirect(f"/titles/{olive_title_id}/{olive_community_id}/edit/whitelist")
-    whitelist = User.objects.filter(private_community_access__community=communityobj)
-    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"community":communityobj,"whitelist_users":whitelist}
-    return render(request, f"{layout}/edit_community_whitelist.html", data)

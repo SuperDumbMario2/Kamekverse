@@ -1,5 +1,8 @@
 from .models import *
 from django.conf import settings
+from django.contrib.auth.models import AnonymousUser
+import hashlib
+import secrets
 # Page starting routine
 def PageStartRoutine(request):
     if request.GET.get("layout") == "neo" or request.COOKIES.get("layout") == "neo":
@@ -18,3 +21,18 @@ def IsCommunityAccess(request, community):
         if allows or community.author == request.user:
             return True
     return False
+def GetAPIUser(request):
+    auth = request.headers.get("Authorization")
+    parts = auth.split()
+    if len(parts) != 2 or parts[0] != "Bearer":
+        return AnonymousUser()
+    raw_token = parts[1]
+    token_hash = hashlib.sha256(raw_token.encode()).hexdigest()
+    try:
+        token = API_Token.objects.get(token_hash=token_hash)
+        if token.is_usable:
+            return token.account
+    except API_Token.DoesNotExist:
+        return AnonymousUser()
+def new_api_key():
+    return secrets.token_urlsafe(32)
