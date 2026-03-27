@@ -3891,12 +3891,7 @@ var Olv = Olv || {};
 		b.pop().element.removeClass("active-dialog");
 		var c = b.length ? b[b.length - 1] : null;
 		c ? c.element.addClass("active-dialog") : this.toggleMask(!1), this.currentWindow = c
-	}, b.ModalWindowManager._mask = null, b.ModalWindowManager.toggleMask = function(b) {
-		var c = this._mask;
-		c || (c = this._mask = a("<div>", {
-			"class": "mask none"
-		}).on("click", new Function).appendTo(document.body)), c.toggleClass("none", !b)
-	}, b.ModalWindowManager.setup = function() {
+	}, b.ModalWindowManager._mask = null, b.ModalWindowManager.toggleMask = function(b) {}, b.ModalWindowManager.setup = function() {
 		a(document).on("click", "[data-modal-open]", function(c) {
 			var d = a(this);
 			if (!b.Form.isDisabled(d) && !c.isDefaultPrevented()) {
