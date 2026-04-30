@@ -439,6 +439,16 @@ def post_set_spoiler(request, id):
     post.save()
     return HttpResponse()
 @csrf_exempt
+def post_set_profile_post(request, id):
+    post = Post.objects.get(post_id=id)
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden("log in pls")
+    if request.user != post.creator and not request.user.is_staff:
+        return HttpResponseForbidden("no")
+    post.creator.profile.featured_post = post
+    post.save()
+    return HttpResponse()
+@csrf_exempt
 def post_delete(request, id):
     post = Post.objects.get(post_id=id)
     if not request.user.is_authenticated:
@@ -698,6 +708,22 @@ def settings_api_regenerate(request, id):
     data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"api_token":token_key}
     return render(request, f"{layout}/api_keys_new.html", data)
 
+def settings_site(request):
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    if request.method == "POST":
+        profile = Profile.objects.get(user=request.user)
+        if request.POST.get("theme"):
+            theme = Theme.objects.get(tid=request.POST.get("theme"))
+            profile.theme = theme
+        else:
+            profile.theme = None
+        profile.save()
+    requestinfo = PageStartRoutine(request)
+    layout = requestinfo["layout"]
+    themes = Theme.objects.all()
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID, "themes":themes}
+    return render(request, f"{layout}/site_settings.html", data)
 # API views (Kamekverse's custom API, the replica of Miiverse API may be in an extension just like the console UIs if i will ever get to make it)
 
 
@@ -846,6 +872,61 @@ def api_community_list(request):
     for c in communities:
         output.append({"olive_title_id": int(c.olive_title_id), "olive_community_id": int(c.olive_community_id)})
     resp = JsonResponse(output, safe=False)
+    resp["Access-Control-Allow-Origin"] = "*"
+    resp["Access-Control-Allow-Methods"] = "*"
+    resp["Access-Control-Allow-Headers"] = "*"
+    return resp
+
+@csrf_exempt
+def api_post_toggle_yeah(request, post_id):
+    if request.method == "POST":
+        if Post.objects.filter(post_id=post_id).exists():
+            post = Post.objects.get(post_id=post_id)
+            user = GetAPIUser(request)
+            if user.is_authenticated:
+                if Post_Yeah.objects.filter(post=post, user=user).exists():
+                    Post_Yeah.objects.get(post=post, user=user).delete()
+                    resp = JsonResponse({"status": 200, "action": "delete"})
+                else:
+                    Post_Yeah.objects.create(post=post, user=user)
+                    resp = JsonResponse({"status": 200, "action": "create"})
+            else:
+                resp = JsonResponse({"status": 403})
+                resp.status_code = 403
+        else:
+            resp = JsonResponse({"status": 404})
+            resp.status_code = 404
+    else:
+        resp = JsonResponse({"status": 403})
+        resp.status_code = 403
+    resp["Access-Control-Allow-Origin"] = "*"
+    resp["Access-Control-Allow-Methods"] = "*"
+    resp["Access-Control-Allow-Headers"] = "*"
+    return resp
+
+
+@csrf_exempt
+def api_post_toggle_nah(request, post_id):
+    if request.method == "POST":
+        if Post.objects.filter(post_id=post_id).exists():
+            post = Post.objects.get(post_id=post_id)
+            user = GetAPIUser(request)
+            if user.is_authenticated:
+                if Post_Nah.objects.filter(post=post, user=user).exists():
+                    Post_Nah.objects.get(post=post, user=user).delete()
+                    resp = JsonResponse({"status": 200, "action": "delete"})
+                else:
+                    Post_Nah.objects.create(post=post, user=user)
+                    resp = JsonResponse({"status": 200, "action": "create"})
+            else:
+                resp = JsonResponse({"status": 403})
+                resp.status_code = 403
+        else:
+            resp = JsonResponse({"status": 404})
+            resp.status_code = 404
+    else:
+        resp = JsonResponse({"status": 403})
+        resp.status_code = 403
     resp["Access-Control-Allow-Origin"] = "*"
     resp["Access-Control-Allow-Methods"] = "*"
     resp["Access-Control-Allow-Headers"] = "*"

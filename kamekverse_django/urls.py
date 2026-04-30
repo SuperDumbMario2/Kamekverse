@@ -40,6 +40,7 @@ urlpatterns = [
     path('posts/<str:id>/replies', views.posts_replies_endpoint),
     path('posts/<str:id>/embed', views.post),
     path('posts/<str:id>.set_spoiler', views.post_set_spoiler),
+    path('posts/<str:id>/screenshot.set_profile_post', views.post_set_profile_post),
     path('posts/<str:id>.delete', views.post_delete),
     path('posts/<str:id>', views.post),
     path('posts', views.posts_endpoint),
@@ -65,4 +66,7 @@ urlpatterns = [
     path('api/community/<int:olive_title_id>/<int:olive_community_id>/posts', views.api_community_posts),
     path('api/user/<str:username>/profile', views.api_user_profile),
     path('api/community/list', views.api_community_list),
+    path('api/post/<str:post_id>/toggle_yeah', views.api_post_toggle_yeah),
+    path('api/post/<str:post_id>/toggle_nah', views.api_post_toggle_nah),
+    path("settings/site", views.settings_site)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

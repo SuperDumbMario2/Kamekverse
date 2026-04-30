@@ -1,7 +1,13 @@
 # Kamekverse API documentation
 
-## `/api/server_config/`
-Example: `{"server_name": "Kamekverse", "is_production": true, "is_development": false, "env_name": "prod", "env_id": "L1"}`
+## Auth
+
+You need an API key to access certain parts of the website such as private communities and do things like leaving Yeahs.
+
+Just pass in an `Authorization` header with value of `Bearer <api key>`, replacing <api key> with your own Kamekverse API key.
+
+## GET `/api/server_config/`
+Example response: `{"server_name": "Kamekverse", "is_production": true, "is_development": false, "env_name": "prod", "env_id": "L1"}`
 
 This endpoint returns basic info about the instance.
 
@@ -25,17 +31,15 @@ Long env name
 
 Env id. Starts with a letter, ends with a number by default, but instance owners may reconfigure it to whatever they want it to be.
 
-## `/api/community/<olive_title_id>/<olive_community_id>/posts`
+## GET `/api/community/<olive_title_id>/<olive_community_id>/posts`
 
-This endpoint will return posts from an public (!) community. You can give it a number in the GET param `amount` to specify the amount of posts in the output. Default is 200. If you will put in `all`, then the output will be every post in the community.
+This endpoint will return posts from a community. You can give it a number in the GET param `amount` to specify the amount of posts in the output. Default is 200. If you will put in `all`, then the output will be every post in the community.
 
-Example: `{"result": 200, "posts": [{"id": "AYMHAABBCAfnoS5ScY9mtw", "author": "superdumbmario2", "body": "Test post with an image", "yeah": 0, "nah": 0, "mii_expression": "happy", "is_spoiler": false, "is_featured": false, "replies": 0, "is_image": true, "image": "/cdn/post_images/6df90ed638bc41618ed8a97cd8b17ff4.png"}, {"id": "AYMHAABBuGW4DQiMm88I3g", "author": "superdumbmario2", "body": "Test post without an image", "yeah": 0, "nah": 0, "mii_expression": "normal", "is_spoiler": false, "is_featured": false, "replies": 0, "is_image": false}]}`
+Example response: `{"result": 200, "posts": [{"id": "AYMHAABBCAfnoS5ScY9mtw", "author": "superdumbmario2", "body": "Test post with an image", "yeah": 0, "nah": 0, "mii_expression": "happy", "is_spoiler": false, "is_featured": false, "replies": 0, "is_image": true, "image": "/cdn/post_images/6df90ed638bc41618ed8a97cd8b17ff4.png"}, {"id": "AYMHAABBuGW4DQiMm88I3g", "author": "superdumbmario2", "body": "Test post without an image", "yeah": 0, "nah": 0, "mii_expression": "normal", "is_spoiler": false, "is_featured": false, "replies": 0, "is_image": false}]}`
 
 ### Auth
 
-You need an API key to access private communities' metadata.
-
-Just pass in an `Authorization` header with value of `Beaver <api key>`, replacing <api key> with your own Kamekverse API key.
+You need an API key to access private communities' posts.
 
 You only can do this if you are whitelisted in the said community.
 
@@ -97,11 +101,11 @@ Does the post have an image?
 
 A path to the image. Please note that it doesn't include the domain, so you will have to add that yourself.
 
-## `api/user/<username>/profile`
+## GET `api/user/<username>/profile`
 
 This endpoint will return profile metadata (e.g mii, displayname, etc.) of a specific user.
 
-Example: `{"result": 200, "username": "api_example", "mii_name": "API Example", "mii_method": "mii-pnid", "mii_value": "PN_Jon", "bio": "My bio", "follower_count": 0, "friend_count": 0, "follow_count": 0, "game_experience": "beginner", "karma": 0}`
+Example response: `{"result": 200, "username": "api_example", "mii_name": "API Example", "mii_method": "mii-pnid", "mii_value": "PN_Jon", "bio": "My bio", "follower_count": 0, "friend_count": 0, "follow_count": 0, "game_experience": "beginner", "karma": 0}`
 
 ### `result`
 
@@ -157,17 +161,15 @@ Set game experience, lowercase.
 
 Amount of Mii Coins.
 
-## `/api/community/<olive_title_id>/<olive_community_id>/metadata`
+## GET `/api/community/<olive_title_id>/<olive_community_id>/metadata`
 
 This endpoint will return metadata of a community.
 
-Example: `{"result": 200, "name": "Test API community", "desc": "", "is_locked": false, "is_redesigned": false, "platform_name": "", "max_post_length": 2200, "max_comment_length": 2200, "is_special": false, "is_featured": false, "allow_comments": true, "offdevice_icon": "/cdn/community_icons/default.png", "has_badge": false, "console": 1, "author": "superdumbmario2"}`
+Example response: `{"result": 200, "name": "Test API community", "desc": "", "is_locked": false, "is_redesigned": false, "platform_name": "", "max_post_length": 2200, "max_comment_length": 2200, "is_special": false, "is_featured": false, "allow_comments": true, "offdevice_icon": "/cdn/community_icons/default.png", "has_badge": false, "console": 1, "author": "superdumbmario2"}`
 
 ### Auth
 
 You need an API key to access private communities' metadata.
-
-Just pass in an `Authorization` header with value of `Beaver <api key>`, replacing <api key> with your own Kamekverse API key.
 
 You only can do this if you are whitelisted in the said community.
 
@@ -245,16 +247,78 @@ If the community is user-created or an author acc was passed thru the admin pane
 
 If the community has it, it will link to the banner used on offdevice and neo layouts. Note that it doesn't include the URL to the instance.
 
-## `/api/community/list`
+## GET `/api/community/list`
 
-Example: `[{"olive_title_id": 0, "olive_community_id": 0}, {"olive_title_id": 1, "olive_community_id": 1}, {"olive_title_id": 2, "olive_community_id": 2}, {"olive_title_id": 3, "olive_community_id": 3}, {"olive_title_id": 4, "olive_community_id": 4}]`
+Example response: `[{"olive_title_id": 0, "olive_community_id": 0}, {"olive_title_id": 1, "olive_community_id": 1}, {"olive_title_id": 2, "olive_community_id": 2}, {"olive_title_id": 3, "olive_community_id": 3}, {"olive_title_id": 4, "olive_community_id": 4}]`
 
 This endpoint returns a list of every public (!) community as olive_title_id and olive_community_id.
+
+## POST `post/<post_id>/toggle_yeah`
+
+Example response: `{"status": 200, "action": "create"}`
+
+This endpoint toggles a yeah on a post.
+
+### Auth
+
+Auth is mandatory for this endpoint.
+
+### `status`
+
+Returns the request status
+
+200 means it was successful.
+
+If you're trying to yeah an non-existent post, it will return 404.
+
+If the request is not POST or you didn't supply auth, it will return 403.
+
+### `action`
+
+This only exists if `status` = 200, and returns the action that was done.
+
+If it's `delete` it means that the yeah was deleted.
+
+If it's `create` it means the yeah was placed.
+
+## POST `post/<post_id>/toggle_nah`
+
+Example response: `{"status": 200, "action": "create"}`
+
+This endpoint toggles a nah on a post.
+
+### Auth
+
+Auth is mandatory for this endpoint.
+
+### `status`
+
+Returns the request status
+
+200 means it was successful.
+
+If you're trying to nah an non-existent post, it will return 404.
+
+If the request is not POST or you didn't supply auth, it will return 403.
+
+### `action`
+
+This only exists if `status` = 200, and returns the action that was done.
+
+If it's `delete` it means that the nah was deleted.
+
+If it's `create` it means the nah was placed.
 
 ## Notes
 
 To get the `olive_title_id` and `olive_community_id` values of a community, you just need to go to that community's page and look at the url.
 
-Example url: `kamekverse.pythonanywhere.com/titles/123/456`
+Example url: `https://kamekverse.pythonanywhere.com/titles/123/456`
 
 The first number in the url after `titles` is `olive_title_id`, the next number is `olive_community_id`.
+
+To get the `post_id` value at the post, you also look at the url.
+
+Example url: `http://kamekverse.pythonanywhere.com/posts/AYMHAAAAAAAAAAAAAAAA`
+
+The part of the url aftter `posts` is the `post_id`. Here, it is `AYMHAAAAAAAAAAAAAAAA`
