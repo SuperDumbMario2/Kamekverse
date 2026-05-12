@@ -6,6 +6,8 @@ from django.contrib.auth import authenticate, login as login_auth, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Exists, OuterRef
 from django.core.files.base import ContentFile
+from django.db import transaction
+from django.db.models import F
 from .models import *
 from .utils import *
 import os
@@ -139,25 +141,26 @@ def posts_endpoint(request):
         return render(request, "offdevice/posts_endpoint_output.html", data)
 @csrf_exempt
 def posts_empathies_endpoint(request, id):
-    if request.method == "POST":
-        if request.user.is_authenticated:
-            postobj = Post.objects.get(post_id=id)
-            if Post_Yeah.objects.filter(post=postobj, user=request.user).exists():
-                return HttpResponseForbidden("Already yeahed with this acc!")
-            if Post_Nah.objects.filter(post=postobj, user=request.user).exists():
-                return HttpResponseForbidden("Nahed with this acc!")
-            if not settings.ALLOW_SELF_YEAH and postobj.creator == request.user:
-                return HttpResponseForbidden("This instance blocks self-yeahs!")
-            Post_Yeah.objects.create(post=postobj, user=request.user)
-            post = Post.objects.get(post_id=id)
-            post.yeahs = int(post.yeahs)+1
-            post.save()
-            userp = post.creator.profile
-            userp.karma = int(userp.karma)+1
-            userp.save()
-            return HttpResponse()
-        else:
-            return HttpResponseForbidden("Not logged in!")
+    if not request.method == "POST":
+        return HttpResponseForbidden()
+    if not request.user.is_authenticated:
+         return HttpResponseForbidden("Not logged in!")
+    with transaction.atomic():
+        postobj = Post.objects.select_for_update().get(post_id=id)
+        if Post_Yeah.objects.filter(post=postobj, user=request.user).exists():
+            return HttpResponseForbidden("Already yeahed with this acc!")
+        if Post_Nah.objects.filter(post=postobj, user=request.user).exists():
+            return HttpResponseForbidden("Nahed with this acc!")
+        if not settings.ALLOW_SELF_YEAH and postobj.creator == request.user:
+            return HttpResponseForbidden("This instance blocks self-yeahs!")
+        Post_Yeah.objects.create(post=postobj, user=request.user)
+        post = Post.objects.get(post_id=id)
+        post.yeahs = int(post.yeahs)+1
+        post.save()
+        userp = post.creator.profile
+        userp.karma = int(userp.karma)+1
+        userp.save()
+        return HttpResponse()
 @csrf_exempt
 def posts_empathies_delete_endpoint(request, id):
     if request.method == "POST":
@@ -180,25 +183,26 @@ def posts_empathies_delete_endpoint(request, id):
             return HttpResponseForbidden("Not logged in!")
 @csrf_exempt
 def posts_nahs_endpoint(request, id):
-    if request.method == "POST":
-        if request.user.is_authenticated:
-            postobj = Post.objects.get(post_id=id)
-            if not settings.ALLOW_SELF_YEAH and postobj.creator == request.user:
-                return HttpResponseForbidden("This instance blocks self-yeahs!")
-            if Post_Nah.objects.filter(post=postobj, user=request.user).exists():
-                return HttpResponseForbidden("Already nahed with this acc!")
-            if Post_Yeah.objects.filter(post=postobj, user=request.user).exists():
-                return HttpResponseForbidden("Yeahed with this acc!")
-            Post_Nah.objects.create(post=postobj, user=request.user)
-            post = Post.objects.get(post_id=id)
-            post.nahs = int(post.nahs)+1
-            post.save()
-            userp = post.creator.profile
-            userp.karma = int(userp.karma)-1
-            userp.save()
-            return HttpResponse()
-        else:
-            return HttpResponseForbidden("Not logged in!")
+    if not request.method == "POST":
+        return HttpResponseForbidden()
+    if not request.user.is_authenticated:
+         return HttpResponseForbidden("Not logged in!") 
+    with transaction.atomic():
+        postobj = Post.objects.select_for_update().get(post_id=id)
+        if not settings.ALLOW_SELF_YEAH and postobj.creator == request.user:
+            return HttpResponseForbidden("This instance blocks self-yeahs!")
+        if Post_Nah.objects.filter(post=postobj, user=request.user).exists():
+            return HttpResponseForbidden("Already nahed with this acc!")
+        if Post_Yeah.objects.filter(post=postobj, user=request.user).exists():
+            return HttpResponseForbidden("Yeahed with this acc!")
+        Post_Nah.objects.create(post=postobj, user=request.user)
+        post = Post.objects.get(post_id=id)
+        post.nahs = int(post.nahs)+1
+        post.save()
+        userp = post.creator.profile
+        userp.karma = int(userp.karma)-1
+        userp.save()
+        return HttpResponse()
 @csrf_exempt
 def posts_nahs_delete_endpoint(request, id):
     if request.method == "POST":

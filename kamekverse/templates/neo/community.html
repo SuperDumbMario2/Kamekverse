@@ -1,3 +1,4 @@
+{% load formatting %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en"><head>
@@ -166,7 +167,7 @@
                               </div>
                       
                       
-                                  <p class="post-content-text">{{ post.body }}</p>
+                                  <p class="post-content-text">{{ post.body|formatting }}</p>
                                   {% if post.is_image == True %}<p class="post-content-memo"><img src="{{ post.image.url }}" class="post-memo"></p>{% endif %}
                       
                               <div class="post-meta">

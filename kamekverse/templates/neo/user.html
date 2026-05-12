@@ -1,3 +1,4 @@
+{% load formatting %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en" data-google-analytics-tracking-id="UA-68779773-1" class="os-win" style="--wm-toolbar-height: 1px;"><head>    
@@ -105,7 +106,7 @@
             </div>
     
     
-                <p class="post-content-text">{{ post.body }}</p>
+                <p class="post-content-text">{{ post.body|formatting }}</p>
     
             <div class="post-meta">
               <button type="button" {% if not user.is_authenticated %}disabled=""{% endif %}{% if post.is_nah %} disabled=""{% endif %}{% if not ALLOW_SELF_YEAH and post.creator == user %} disabled=""{% endif %} class="symbol submit empathy-button {% if post.is_yeah %} empathy-added{% endif %}{% if post.is_nah %} disabled{% endif %}{% if not user.is_authenticated %} disabled{% endif %}{% if not ALLOW_SELF_YEAH and post.creator == user %} disabled={% endif %}" data-feeling="normal" data-action="/posts/{{ post.post_id }}/empathies" data-community-id="14866558073038702637" data-url-id="{{ post.post_id }}" data-track-label="default" data-title-id="14866558072985245728" data-track-action="{% if post.is_yeah %}cancelY{% else %}y{% endif %}eah" data-track-category="empathy"><span class="empathy-button-text">{% if user.is_authenticated %}{%if post.is_yeah%}Unyeah{% else %}{% if post.feeling == "like" %}Yeah♥{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Yeah...{% else %}Yeah!{% endif %}{%endif%}{%else%}{% if post.feeling == "like" %}Yeah♥{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Yeah...{% else %}Yeah!{%endif%}{%endif%}</span></button>

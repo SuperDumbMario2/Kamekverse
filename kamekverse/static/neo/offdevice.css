@@ -9444,6 +9444,15 @@ body.search .search-content p.note {
   position: relative;
   left: 12px;
 }
+.greentext {
+  color: #789922;
+}
+.orangetext {
+  color: #f6750b;
+}
+.bluetext {
+  color: #6577E6;
+}
 /*
      FILE ARCHIVED ON 18:55:21 Mar 04, 2016 AND RETRIEVED FROM THE
      INTERNET ARCHIVE ON 09:09:02 Mar 16, 2025.
