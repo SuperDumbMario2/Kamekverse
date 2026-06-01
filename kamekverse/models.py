@@ -49,6 +49,7 @@ class Theme(models.Model):
     name = models.TextField() # Theme name
     tid = models.TextField(default=post_ids) # Theme ID
     css = models.FileField(upload_to=themeurls) # Main CSS file of the theme
+    is_hidden = models.BooleanField(default=False)
     def __str__(self):
         return self.name
 class Community(models.Model):
@@ -134,7 +135,8 @@ class Profile(models.Model):
     featured_post = models.ForeignKey(Post, on_delete=models.SET_NULL, null=True, blank=True) # What is the post shown on the user's banner?
     discord = models.TextField(null=True, blank=True) # Discord tag
     ban = models.BooleanField(default=False) # Is banned?
-    theme = models.ForeignKey(Theme, on_delete=models.SET_NULL, null=True, blank=True)
+    theme = models.ManyToManyField(Theme, blank=True)
+    themes_urls = models.JSONField(default=list, blank=True)
     themecolor = models.TextField(null=True, blank=True)
     def __str__(self):
         return self.user.username

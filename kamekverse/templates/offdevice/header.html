@@ -1,9 +1,14 @@
 {% load static %}
 <html><head>
   {% if user.is_authenticated %}
-  {% if user.profile.theme%}
-            <link rel="stylesheet" type="text/css" href="{{ user.profile.theme.css.url }}">
+  {% if user.profile.theme.all%}
+  {% for thm in user.profile.theme.all %}
+            <link rel="stylesheet" type="text/css" href="{{ thm.css.url }}">
+            {% endfor %}
             {% endif %}
+            {% for url in user.profile.themes_urls %}
+            <link rel="stylesheet" type="text/css" href="{{ url }}">
+            {% endfor %}
             {% if user.profile.themecolor%}
             <style>
               :root {
