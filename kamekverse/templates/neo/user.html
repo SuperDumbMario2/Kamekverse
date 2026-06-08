@@ -34,12 +34,12 @@
     <img src="{{ vuser.profile.featured_post.image.url }}" class="sidebar-cover-image">
   </a>{% endif %}
     <div id="sidebar-profile-body" class="">
-      <div class="icon-container ' . $badge . '">
+      <div class="icon-container  {% if vuser.profile.badge %}official-user{% endif %}" {% if vuser.profile.badge %} style='--user-badge: url("{{vuser.profile.badge.img.url}}")' {% endif%}>
         <a>
           <img src="{% if vuser.profile.pfp_method == 'mii-nnid' or vuser.profile.pfp_method == 'mii-pnid' or vuser.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if vuser.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ vuser.profile.pfp_value }}{% if vuser.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression=normal{% else %}{% static 'neo/unknown_mii.png' %}{% endif %}" class="icon">
         </a>
       </div>
-      
+      {% if vuser.profile.badge %}<span class="user-organization">{{ vuser.profile.badge.name }}</span>{% endif %}
       <a class="nick-name" ' . $nickcss . '>{{ vuser.profile.mii_name }}</a>
       <p class="id-name">{{ vuser.username }}</p>
     </div>
@@ -90,7 +90,7 @@
   <div id="post-{{ post.post_id }}" data-href="/posts/{{ post.post_id }}" class="post post-subtype-default trigger" tabindex="0">
     <p class="community-container">
       <a class="test-community-link" href="/titles/{{ post.community.olive_title_id }}/{{ post.community.olive_community_id }}"><img src="{{ post.community.offdevice_icon.url }}" class="community-icon">{{ post.community.name }}</a></p>
-      <a href="/users/{{ post.creator.username }}" class="icon-container"><img src="{% if post.creator.profile.pfp_method == 'mii-nnid' or post.creator.profile.pfp_method == 'mii-pnid' or post.creator.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if post.creator.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ post.creator.profile.pfp_value }}{% if post.creator.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression={{ post.feeling }}{% else %}{% static 'neo/unknown_mii.png' %}{% endif %}" class="icon"></a>
+      <a href="/users/{{ post.creator.username }}" class="icon-container  {% if post.creator.profile.badge %}official-user{% endif %}" {% if post.creator.profile.badge %} style='--user-badge: url("{{post.creator.profile.badge.img.url}}")' {% endif%}><img src="{% if post.creator.profile.pfp_method == 'mii-nnid' or post.creator.profile.pfp_method == 'mii-pnid' or post.creator.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if post.creator.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ post.creator.profile.pfp_value }}{% if post.creator.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression={{ post.feeling }}{% else %}{% static 'neo/unknown_mii.png' %}{% endif %}" class="icon"></a>
     
     
       <p class="user-name"><a href="/users/{{ post.creator.username }}">{{ post.creator.profile.mii_name }}</a></p>

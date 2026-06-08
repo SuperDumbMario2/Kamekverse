@@ -36,6 +36,9 @@ class Platform_Badge(models.Model):
     name = models.CharField(max_length=127, default="Unnamed Badge") # Internal name, used for admin panel
     def __str__(self):
         return self.name
+class User_Badge(models.Model):
+    img = models.ImageField(upload_to="badges/")
+    name = models.CharField(max_length=127, default="Unnamed Badge")
 class Title(models.Model):
     name = models.CharField(max_length=127) # Title name
     title_id = models.BigIntegerField(default=olive_ids) # Title ID, uses placeholder/random ID
@@ -138,6 +141,7 @@ class Profile(models.Model):
     theme = models.ManyToManyField(Theme, blank=True)
     themes_urls = models.JSONField(default=list, blank=True)
     themecolor = models.TextField(null=True, blank=True)
+    badge = models.ForeignKey(User_Badge, on_delete=models.SET_NULL, null=True, blank=True) # Badge
     def __str__(self):
         return self.user.username
 class Post_Yeah(models.Model):
