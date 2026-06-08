@@ -38,7 +38,7 @@ urlpatterns = [
     path('posts/<str:id>/nahs', views.posts_nahs_endpoint),
     path('posts/<str:id>/nahs.delete', views.posts_nahs_delete_endpoint),
     path('posts/<str:id>/replies', views.posts_replies_endpoint),
-    path('posts/<str:id>/embed', views.post),
+    path('posts/<str:id>/embed', views.post_embed),
     path('posts/<str:id>.set_spoiler', views.post_set_spoiler),
     path('posts/<str:id>/screenshot.set_profile_post', views.post_set_profile_post),
     path('posts/<str:id>.delete', views.post_delete),

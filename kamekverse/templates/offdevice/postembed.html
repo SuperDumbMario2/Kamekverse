@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" style="overflow: hidden;"><head>
+    <meta charset="utf-8">
+    <title>Miiverse | Nintendo</title>
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css" href="{% static 'offdevice/embedded.css' %}">
+  <body id="post-permalink">
+
+
+<div id="post-content" class="post " data-post-url-id="{{ post.post_id }}">
+  <p class="community-container">    
+
+    
+    <a class="test-community-link" href="/titles/{{ post.community.olive_title_id }}/{{ post.community.olive_title_id }}" target="_blank"><img src="{{ post.community.offdevice_icon.url }}" class="community-icon">{{ post.community.name }}
+    </a>
+  </p>
+
+  <p id="service-logo"><a href="/" target="_blank"><img src="{% static '/offdevice/menu-logo.png' %}" alt="Kamekverse"></a></p>
+  <span class="icon-container {% if post.creator.profile.badge %}official-user{% endif %}" {% if post.creator.profile.badge %} style='--user-badge: url("{{post.creator.profile.badge.img.url}}")' {% endif%}><img src="{% if post.creator.profile.pfp_method == 'mii-nnid' or post.creator.profile.pfp_method == 'mii-pnid' or post.creator.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if post.creator.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ post.creator.profile.pfp_value }}{% if post.creator.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression={{post.feeling}}{% else %}{% static 'offdevice/unknown_mii.png' %}{% endif %}" class="icon"></span>
+
+  <p class="user-name"><span>{{post.creator.profile.mii_name}}</span></p>
+  <p class="timestamp-container">
+    <span class="spoiler-status">Spoilers·</span>
+    <a href="/posts/{{ post.post_id }}" target="_blank"><span class="timestamp">{{post.creation_date}}</span></a>
+  </p>
+
+  <div class="body">
+    <p class="post-content-text">{{post.body}}</p>
+    <div class="post-meta">
+      <a href="/posts/{{ post.post_id }}" target="miiverse_{{ post.post_id }}" id="empathy-button" class="symbol submit empathy-button" data-window-width="400" data-window-height="600"><span class="empathy-button-text">{% if user.is_authenticated %}{%if is_yeah%}Unyeah{% else %}{% if post.feeling == "like" %}Yeah♥{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Yeah...{% else %}Yeah!{% endif %}{%endif%}{%else%}{% if post.feeling == "like" %}Yeah♥{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Yeah...{% else %}Yeah!{%endif%}{%endif%}</span></a>
+      <a href="/posts/{{ post.post_id }}" target="miiverse_{{ post.post_id }}" id="empathy-button" class="symbol submit nah-button" data-window-width="400" data-window-height="600"><span class="empathy-button-text">{% if user.is_authenticated %}{%if is_nah%}Un-nah{% else %}{% if post.feeling == "like" %}Nah?!{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Nah...{% else %}Nah...{% endif %}{%endif%}{%else%}{% if post.feeling == "like" %}Nah?!{% elif post.feeling == "frustrated" or post.feeling == "puzzled" %}Nah!{% else %}Nah...{%endif%}{%endif%}</span></a>
+      <div class="empathy symbol"><span class="symbol-label">Yeahs</span><span class="empathy-count">{{post.yeahs}}</span></div>
+      <div class="reply symbol"><span class="symbol-label">Comment</span><span class="reply-count">{{post.nahs}}</span></div>
+    </div>
+  </div>
+</div>
+
+  
+</body></html>

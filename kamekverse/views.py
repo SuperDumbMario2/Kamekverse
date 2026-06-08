@@ -732,6 +732,12 @@ def settings_site(request):
     themes = Theme.objects.filter(is_hidden=False)
     data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID, "themes":themes}
     return render(request, f"{layout}/site_settings.html", data)
+
+def post_embed(request, id):
+    post = Post.objects.get(post_id=id)
+    iscommmunityaccessible = IsCommunityAccess(request, post.community)
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"ALLOW_SELF_YEAH":settings.ALLOW_SELF_YEAH, "post": post, "iscommmunityaccessible": iscommmunityaccessible}
+    return render(request, f"offdevice/postembed.html", data)
 # API views (Kamekverse's custom API, the replica of Miiverse API may be in an extension just like the console UIs if i will ever get to make it)
 
 
@@ -947,3 +953,4 @@ def api_post_toggle_nah(request, post_id):
     resp["Access-Control-Allow-Methods"] = "*"
     resp["Access-Control-Allow-Headers"] = "*"
     return resp
+    

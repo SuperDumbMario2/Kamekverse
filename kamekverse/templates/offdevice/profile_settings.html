@@ -25,7 +25,7 @@
     <img src="{{ user.profile.featured_post.image.url }}" class="sidebar-cover-image">
   </a>{% endif %}
     <div id="sidebar-profile-body" class="">
-      <div class="icon-container  {% if post.creator.profile.badge %}official-user{% endif %}">
+      <div class="icon-container  {% if post.creator.profile.badge %}official-user{% endif %}" {% if post.creator.profile.badge %} style='--user-badge: url("{{post.creator.profile.badge.img.url}}")' {% endif%}>
         <a>
           <img src="{% if user.profile.pfp_method == 'mii-nnid' or user.profile.pfp_method == 'mii-pnid' or user.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if user.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ user.profile.pfp_value }}{% if user.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression=normal{% else %}{% static 'offdevice/unknown_mii.png' %}{% endif %}" class="icon">
         </a>
