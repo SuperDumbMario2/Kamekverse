@@ -1,4 +1,4 @@
-{% if iscommmunityaccessible %}{% load static %}
+{% if iscommmunityaccessible+ %}{% load static %}
 <!DOCTYPE html>
 <html lang="en"><head>
     <meta charset="utf-8">
@@ -19,7 +19,7 @@
   <p id="service-logo"><a href="/" target="_blank"><img src="{% static '/offdevice/menu-logo.png' %}" alt="Kamekverse"></a></p>
   <span class="icon-container {% if post.creator.profile.badge %}official-user{% endif %}" {% if post.creator.profile.badge %} style='--user-badge: url("{{post.creator.profile.badge.img.url}}")' {% endif%}><img src="{% if post.creator.profile.pfp_method == 'mii-nnid' or post.creator.profile.pfp_method == 'mii-pnid' or post.creator.profile.pfp_method == 'mii-ariankordi' %}https://mii-unsecure.ariankordi.net/miis/image.png?{% if post.creator.profile.pfp_method == 'mii-ariankordi' %}data{% else %}nnid{% endif %}={{ post.creator.profile.pfp_value }}{% if post.creator.profile.pfp_method == 'mii-pnid' %}&api_id=1{% endif %}&type=face&width=120&expression={{post.feeling}}{% else %}{% static 'offdevice/unknown_mii.png' %}{% endif %}" class="icon"></span>
 
-  <p class="user-name"><span>{{post.creator.profile.mii_name}}</span></p>
+  <p class="user-name" style="background: linear-gradient(to right, {{ post.creator.profile.name_color_1 }}, {{ post.creator.profile.name_color_2 }}); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"><span>{{post.creator.profile.mii_name}}</span></p>
   <p class="timestamp-container">
     <span class="spoiler-status">Spoilers·</span>
     <a href="/posts/{{ post.post_id }}" target="_blank"><span class="timestamp">{{post.creation_date}}</span></a>

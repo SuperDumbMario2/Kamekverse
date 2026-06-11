@@ -141,6 +141,8 @@ class Profile(models.Model):
     theme = models.ManyToManyField(Theme, blank=True)
     themes_urls = models.JSONField(default=list, blank=True)
     themecolor = models.TextField(null=True, blank=True)
+    name_color_1 = models.TextField(default="#000000", blank=True)
+    name_color_2 = models.TextField(default="#000000", blank=True)
     badge = models.ForeignKey(User_Badge, on_delete=models.SET_NULL, null=True, blank=True) # Badge
     def __str__(self):
         return self.user.username
