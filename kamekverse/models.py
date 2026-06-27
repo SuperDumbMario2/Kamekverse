@@ -144,6 +144,7 @@ class Profile(models.Model):
     name_color_1 = models.TextField(default="#000000", blank=True)
     name_color_2 = models.TextField(default="#000000", blank=True)
     badge = models.ForeignKey(User_Badge, on_delete=models.SET_NULL, null=True, blank=True) # Badge
+    is_name_color = models.BooleanField(default=False)
     def __str__(self):
         return self.user.username
 class Post_Yeah(models.Model):

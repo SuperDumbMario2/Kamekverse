@@ -233,6 +233,11 @@ def user(request, username):
                 inuser.profile.bio = request.POST.get("bio", "")
                 inuser.profile.pfp_method = request.POST.get("mii_data_type", "")
                 inuser.profile.pfp_value = request.POST.get("mii_input", "")
+                if request.POST.get("nc") == "on":
+                    nc = True
+                else:
+                    nc = False
+                inuser.profile.is_name_color = nc
                 inuser.profile.name_color_1 = request.POST.get("nc1", "")
                 inuser.profile.name_color_2 = request.POST.get("nc2", "")
                 inuser.save()

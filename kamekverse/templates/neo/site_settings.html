@@ -31,7 +31,7 @@
         </a>
       </div>
       
-      <a class="nick-name" style="background: linear-gradient(to right, {{ user.profile.name_color_1 }}, {{ user.profile.name_color_2 }}); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ user.profile.mii_name }}</a>
+      <a class="nick-name" {% if user.profile.is_name_color %}style="background: linear-gradient(to right, {{ user.profile.name_color_1 }}, {{ user.profile.name_color_2 }}); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"{% endif %}>{{ user.profile.mii_name }}</a>
       <p class="id-name">{{ user.username }}</p>
     </div>
     
