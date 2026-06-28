@@ -154,6 +154,8 @@ def posts_empathies_endpoint(request, id):
         if not settings.ALLOW_SELF_YEAH and postobj.creator == request.user:
             return HttpResponseForbidden("This instance blocks self-yeahs!")
         Post_Yeah.objects.create(post=postobj, user=request.user)
+        if request.user != postobj.creator:
+            Notification.objects.create(from_user=request.user, target_usr=postobj.creator, text=f"{request.user.profile.mii_name} Yeahed your post.", target_url=f"/posts/{postobj.post_id}")
         post = Post.objects.get(post_id=id)
         post.yeahs = int(post.yeahs)+1
         post.save()
@@ -196,6 +198,8 @@ def posts_nahs_endpoint(request, id):
         if Post_Yeah.objects.filter(post=postobj, user=request.user).exists():
             return HttpResponseForbidden("Yeahed with this acc!")
         Post_Nah.objects.create(post=postobj, user=request.user)
+        if request.user != postobj.creator:
+            Notification.objects.create(from_user=request.user, target_usr=postobj.creator, text=f"{request.user.profile.mii_name} Nahed your post.", target_url=f"/posts/{postobj.post_id}")
         post = Post.objects.get(post_id=id)
         post.nahs = int(post.nahs)+1
         post.save()
@@ -324,6 +328,8 @@ def posts_replies_endpoint(request, id):
         else:
             fileimg = ""
         mycomment = Comment.objects.create(creator=creator, feeling=feeling, post=post, body=body, is_spoiler=bool(is_spoiler), screenshot=request.POST.get("screenshot"), image=fileimg)
+        if creator != post.creator:
+            Notification.objects.create(from_user=creator, target_usr=post.creator, text=f"{creator.profile.mii_name} commented on your post", target_url=f"/posts/{post.post_id}")
         data = {"name":settings.APP_NAME,"ALLOW_SELF_YEAH":settings.ALLOW_SELF_YEAH, "feeling":feeling, "body":body, "community": post.community, "creator": creator, "post": mycomment}
         post.replies = post.replies+1
         post.save()
@@ -340,6 +346,8 @@ def replies_empathies_endpoint(request, id):
             if Comment_Nah.objects.filter(comment=postobj, user=request.user).exists():
                 return HttpResponseForbidden("Nahed with this acc!")
             Comment_Yeah.objects.create(comment=postobj, user=request.user)
+            if request.user != postobj.creator:
+                Notification.objects.create(from_user=request.user, target_usr=postobj.creator, text=f"{request.user.profile.mii_name} Yeahed your comment.", target_url=f"/posts/{postobj.post.post_id}")
             post = Comment.objects.get(comment_id=id)
             post.yeahs = int(post.yeahs)+1
             post.save()
@@ -480,6 +488,8 @@ def replies_nahs_endpoint(request, id):
             if Comment_Yeah.objects.filter(comment=postobj, user=request.user).exists():
                 return HttpResponseForbidden("Yeahed with this acc!")
             Comment_Nah.objects.create(comment=postobj, user=request.user)
+            if request.user != postobj.creator:
+                Notification.objects.create(from_user=request.user, target_usr=postobj.creator, text=f"{request.user.profile.mii_name} Nahed your comment.", target_url=f"/posts/{postobj.post.post_id}")
             post = Comment.objects.get(comment_id=id)
             post.nahs = int(post.nahs)+1
             post.save()
@@ -745,6 +755,31 @@ def post_embed(request, id):
     iscommmunityaccessible = IsCommunityAccess(request, post.community)
     data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"ALLOW_SELF_YEAH":settings.ALLOW_SELF_YEAH, "post": post, "iscommmunityaccessible": iscommmunityaccessible}
     return render(request, f"offdevice/postembed.html", data)
+
+def check_upd(request):
+    if request.user.is_authenticated:
+        notifs = list(Notification.objects.filter(target_usr=request.user, is_read=False))
+        news_notifs = 0
+        for n in notifs:
+            if n.category == "news":
+                news_notifs += 1
+        return JsonResponse({"success": 1,"news": {"unread_count": news_notifs},"admin_message": {"unread_count": 0},"mission": {"unread_count": 0}})
+    else:
+        return JsonResponse({"success": 0})
+def my_news(request):
+    requestinfo = PageStartRoutine(request)
+    layout = requestinfo["layout"]
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    notifs = Notification.objects.filter(target_usr=request.user).order_by("-id")
+    for n in notifs:
+        n.is_new = n.is_read
+        if n.is_new == False:
+            n.is_read = True
+            n.save(update_fields=["is_read"])
+    data = {"name":settings.APP_NAME,"IS_PROD":settings.IS_PROD,"ENV_ID":settings.ENV_ID,"notifs":notifs}
+    return render(request, f"{layout}/my_news.html", data)
+
 # API views (Kamekverse's custom API, the replica of Miiverse API may be in an extension just like the console UIs if i will ever get to make it)
 
 

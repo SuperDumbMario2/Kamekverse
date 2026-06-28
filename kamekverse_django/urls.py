@@ -68,5 +68,7 @@ urlpatterns = [
     path('api/community/list', views.api_community_list),
     path('api/post/<str:post_id>/toggle_yeah', views.api_post_toggle_yeah),
     path('api/post/<str:post_id>/toggle_nah', views.api_post_toggle_nah),
+    path('check_update.json', views.check_upd),
+    path('news/my_news', views.my_news),
     path("settings/site", views.settings_site)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

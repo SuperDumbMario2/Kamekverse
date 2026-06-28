@@ -184,3 +184,11 @@ class API_Token(models.Model):
     name = models.CharField(max_length=127)
     token_hash = models.CharField(max_length=64)
     is_usable = models.BooleanField(default=True)
+class Notification(models.Model):
+    rec_date = models.DateTimeField(auto_now_add=True) # Date when notif is received
+    target_usr = models.ForeignKey(User, on_delete=models.CASCADE, related_name="received_notifications") # User who received the notif
+    from_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="sent_notifications") # User who caused the notif to appear (e.g commenter on a post, yeaher, etc)
+    text = models.TextField(null=True, blank=True) # notif body text
+    target_url = models.TextField(null=True, blank=True) # The url the user will be redirected to if they click on the notif
+    is_read = models.BooleanField(default=False) # Is read?
+    category = models.TextField(default="news") # Notif category. Some notifs may have their target url, the from_user field, and other data in the frontend overriden by category. 
